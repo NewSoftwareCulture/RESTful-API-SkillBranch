@@ -27,4 +27,4 @@ ItemSchema.methods.toJSON = function () {
   return _.pick(this, ['dishId', 'amount', 'price']);
 };
 
-export default mongoose.model('Item', ItemSchema);
+export default mongoose.model('BasketItem', ItemSchema);

@@ -32,7 +32,7 @@ const BasketSchema = new Schema({
 });
 
 BasketSchema.methods.toJSON = function () {
-  return _.pick(this, ['promocode', 'promotext', 'total', 'items']);
+  return _.pick(this, ['userId', 'promocode', 'promotext', 'total', 'items']);
 };
 
 export default mongoose.model('Basket', BasketSchema);
