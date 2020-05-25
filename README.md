@@ -1,1 +1,1 @@
-# RESTfull API SkillBranch
+# RESTful API SkillBranch
