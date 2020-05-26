@@ -8,7 +8,6 @@ import Logger from './middlewares/Logger';
 // import models from './models/models';
 
 process.env.URI = "mongodb://localhost:27017/skillbranch_db";
-process.env.__MODE__ = 'DEV';
 
 const uri = process.env.URI;
 
