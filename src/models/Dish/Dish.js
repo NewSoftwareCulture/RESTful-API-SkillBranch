@@ -4,11 +4,6 @@ import _ from 'lodash';
 const { Schema } = mongoose;
 
 const DishSchema = new Schema({
-  dishId: {
-    // ID блюда
-    type: Number,
-    required: true,
-  },
   categoryId: {
     // ID категории, к котрой относится блюдо
     type: Number,

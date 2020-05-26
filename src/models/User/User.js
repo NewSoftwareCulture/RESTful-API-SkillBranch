@@ -4,11 +4,6 @@ import _ from 'lodash';
 const { Schema } = mongoose;
 
 const UserSchema = new Schema({
-  userId: {
-    // ID пользователя
-    type: Number,
-    required: true,
-  },
   firstName: {
     // Имя пользователя
     type: String,

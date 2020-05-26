@@ -3,13 +3,10 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import Promise from 'bluebird';
 import cors from 'cors';
-import middleware from './middlewares/index';
+import middlewares from './middlewares/index';
 import Logger from './middlewares/Logger';
-// import models from './models/models';
 
-process.env.URI = "mongodb://localhost:27017/skillbranch_db";
-
-const uri = process.env.URI;
+const uri = "mongodb://localhost:27017/skillbranch_db";
 
 mongoose.Promise = Promise;
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
@@ -24,9 +21,19 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-app.use('/api/auth', middleware.auth);
-
-app.use(middleware.login);
+app.use(middlewares.login);
+app.use(middlewares.register);
+app.use(middlewares.recovery);
+app.use(middlewares.refresh);
+app.use(middlewares.changePassword);
+app.use(middlewares.favorite);
+app.use(middlewares.recommended);
+app.use(middlewares.categories);
+app.use(middlewares.dishes);
+app.use(middlewares.reviews);
+app.use(middlewares.cart);
+app.use(middlewares.check);
+app.use(middlewares.orders);
 
 app.listen(3000, () => {
     Logger('Example app listening on port 3000!\n ________________________\n|                        |\n| http://localhost:3000/ |\n|________________________|\n');
