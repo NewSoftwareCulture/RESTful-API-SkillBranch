@@ -11,19 +11,19 @@ const log = (arg = '') => {
     if (__DEV__ === true) console.log(arg);
 };
 log.GET = (arg) => {
-    if (__DEV__ === true) console.log(`${green}[GET]\t${none}${arg}`);
+    if (__DEV__ === true) console.log(`${green}[GET]\t\t${none}${arg}`);
 };
 log.POST = (arg) => {
-    if (__DEV__ === true) console.log(`${blue}[POST]\t${none}${arg}`);
+    if (__DEV__ === true) console.log(`${blue}[POST]\t\t${none}${arg}`);
 };
 log.PUT = (arg) => {
-    if (__DEV__ === true) console.log(`${cyan}[PUT]\t${none}${arg}`);
+    if (__DEV__ === true) console.log(`${cyan}[PUT]\t\t${none}${arg}`);
 };
 log.DELETE = (arg) => {
     if (__DEV__ === true) console.log(`${red}[DELETE]\t${none}${arg}`);
 };
 log.work = (arg) => {
-    if (__DEV__ === true) console.log(`${yellow}[WORK]\t${none}${arg}`);
+    if (__DEV__ === true) console.log(`${yellow}[WORK]\t\t${none}${arg}`);
 }
 log.connect = (arg) => {
     if (__DEV__ === true) console.log(`${green}[CONNECT]\t${none}${arg}`);
@@ -32,7 +32,7 @@ log.db = (arg) => {
     if (__DEV__ === true) console.log(`${green}[MongoDB]\t${none}${arg}`);
 }
 log.ERROR = (arg) => {
-    if (__DEV__ === true) console.log(`${red}[ERROR]\t${arg}`);
+    if (__DEV__ === true) console.log(`${red}[ERROR]\t\t${arg}`);
 };
 
 module.exports = log;
