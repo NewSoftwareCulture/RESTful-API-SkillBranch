@@ -4,18 +4,21 @@ import bodyParser from 'body-parser';
 import Promise from 'bluebird';
 import cors from 'cors';
 import middleware from './middlewares/index';
+import Logger from './middlewares/Logger';
 // import models from './models/models';
 
 process.env.URI = "mongodb://localhost:27017/skillbranch_db";
+process.env.__MODE__ = 'DEV';
+
 const uri = process.env.URI;
 
 mongoose.Promise = Promise;
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
     .then(() => {
-        console.log('[Mongodb] Connected!');
+        Logger.db('Connected!');
     })
     .catch(e => {
-        console.log(e);
+        Logger.ERROR(e);
     })
 
 const app = express();
@@ -24,24 +27,8 @@ app.use(cors());
 
 app.use('/api/auth', middleware.auth);
 
-app.get('/', async(req, res) => {
-    res.send('Hello World!');
-    console.log('[GET] /')
-});
-
-// app.post('/data', async (req, res) => {
-//     const data = req.body;
-//     if (!data.user) return res.status(400).send('user required!');
-//     // if (!data.pet) data.pets = [];
-  
-//     try {
-//       const result = await saveDataInDb(data);
-//       return res.json(result);
-//     } catch (error) {
-//       return res.status(500).json(error);
-//     }
-//   });
+app.use(middleware.login);
 
 app.listen(3000, () => {
-    console.log('Example app listening on port 3000!\n ________________________\n|                        |\n| http://localhost:3000/ |\n|________________________|\n');
+    Logger('Example app listening on port 3000!\n ________________________\n|                        |\n| http://localhost:3000/ |\n|________________________|\n');
 });

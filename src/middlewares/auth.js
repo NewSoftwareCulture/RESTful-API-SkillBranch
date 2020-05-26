@@ -1,21 +1,40 @@
-import { AsyncRouter } from 'express-async-router';
-// import models from '../models/models';
-import User from '../models/User/User'
 // import bodyParser from 'body-parser';
+import { AsyncRouter } from 'express-async-router';
+import models from '../models/models';
+import Logger from './Logger';
+
 const router = AsyncRouter();
 
-// const User = models.User;
+const User = models.User;
 
 
 
-router.get('/', async (req, res) => {
-    res.status(400).send('Hello!');
-    console.log('[GET] /api/auth/');
+router.get('/:firstName', async (req, res, next) => {
+    console.log('[GET] /api/auth/:firstName');
+    
+    // res.send(req.params.id)
+    const user = await User.findOne({firstName: req.params.firstName});
+    // res.send(users);
+    res.json(user);
+    Logger.PUT(user._id);
+    // console.log(users.params._id);
+    // console.log(users.body.userId);
+    // next();
+    // res.status(400).send('Hello!');
 });
+
+// router.get('/:lastName', async (req, res) => {
+//     console.log('[GET] /api/auth/:lastName');
+    
+//     // res.send(req.params.id)
+//     const users = await User.find({lastName: req.params.lastName});
+//     res.json(users);
+//     // res.status(400).send('Hello!');
+// });
 
 router.get('/user', async (req, res) => {
     res.send('Hello User!');
-    console.log('[GET] /api/auth/user');
+    Logger('/api/auth/user', 'GET');
 });
 
 router.post('/', async(req, res) => {
@@ -39,7 +58,7 @@ router.post('/', async(req, res) => {
     }
     const user = new User(result);
 
-    user.save().then(() => console.log('User created!'));
+    user.save().then(() => Logger('User created!'));
     res.json(result);
 });
 
