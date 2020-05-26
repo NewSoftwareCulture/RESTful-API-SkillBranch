@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 const { Schema } = mongoose;
 
-const BasketSchema = new Schema({
+const CartSchema = new Schema({
   userId: {
     // ID пользователя
     type: Number,
@@ -31,8 +31,8 @@ const BasketSchema = new Schema({
   timestamps: true,
 });
 
-BasketSchema.methods.toJSON = function () {
+CartSchema.methods.toJSON = function () {
   return _.pick(this, ['userId', 'promocode', 'promotext', 'total', 'items']);
 };
 
-export default mongoose.model('Basket', BasketSchema);
+export default mongoose.model('Cart', CartSchema);

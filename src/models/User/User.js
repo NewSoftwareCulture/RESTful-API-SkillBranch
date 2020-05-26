@@ -23,6 +23,7 @@ const UserSchema = new Schema({
     // E-mail
     type: String,
     required: true,
+    unique: true,
   },
   password: {
     // Пароль
