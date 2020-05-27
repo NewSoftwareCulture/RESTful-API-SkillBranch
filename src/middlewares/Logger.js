@@ -25,6 +25,9 @@ log.DELETE = (arg) => {
 log.work = (arg) => {
     if (__DEV__ === true) console.log(`${yellow}[WORK]\t\t${none}${arg}`);
 }
+log.create = (arg) => {
+    if (__DEV__ === true) console.log(`${yellow}[CREATE]\t\t${none}${arg}`);
+}
 log.connect = (arg) => {
     if (__DEV__ === true) console.log(`${green}[CONNECT]\t${none}${arg}`);
 }
@@ -32,7 +35,7 @@ log.db = (arg) => {
     if (__DEV__ === true) console.log(`${green}[MongoDB]\t${none}${arg}`);
 }
 log.ERROR = (arg) => {
-    if (__DEV__ === true) console.log(`${red}[ERROR]\t\t${arg}`);
+    if (__DEV__ === true) console.log(`${red}[ERROR]\t\t${arg}${none}`);
 };
 
 module.exports = log;
