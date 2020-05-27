@@ -6,22 +6,17 @@ const { Schema } = mongoose;
 const FavoriteSchema = new Schema({
   userId: {
     // ID пользователя
-    type: Number,
+    type: String,
     required: true,
   },
   dishId: {
     // ID блюда
-    type: Number,
+    type: String,
     required: true,
   },
   favorite: {
     // Добавлено ли в избранное
     type: Boolean,
-    required: true,
-  },
-  updatedAt: {
-    // Дата обновления (мс)
-    type: Number,
     required: true,
   },
 }, {

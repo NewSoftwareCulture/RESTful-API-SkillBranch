@@ -6,7 +6,7 @@ const { Schema } = mongoose;
 const CartSchema = new Schema({
   userId: {
     // ID пользователя
-    type: Number,
+    type: String,
     required: true,
   },
   promocode: {

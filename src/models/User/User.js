@@ -40,7 +40,7 @@ const UserSchema = new Schema({
 });
 
 UserSchema.methods.toJSON = function () {
-  return _.pick(this, ['userId', 'firstName', 'lastName', 'email', 'password', 'accessToken', 'refreshToken']);
+  return _.pick(this, ['firstName', 'lastName', 'email', 'password', 'accessToken', 'refreshToken']);
 };
 
 export default mongoose.model('User', UserSchema);

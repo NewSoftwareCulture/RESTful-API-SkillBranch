@@ -6,7 +6,7 @@ const { Schema } = mongoose;
 const OrderSchema = new Schema({
   userId: {
     // ID пользователя
-    type: Number,
+    type: String,
     required: true,
   },
   address: {

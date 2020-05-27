@@ -6,7 +6,7 @@ const { Schema } = mongoose;
 const DishSchema = new Schema({
   categoryId: {
     // ID категории, к котрой относится блюдо
-    type: Number,
+    type: String,
     required: true,
   },
   dishName: {
@@ -17,12 +17,15 @@ const DishSchema = new Schema({
   description: {
     // Описание блюда
     type: String,
-    required: true,
+    // required: true,
   },
   image: {
     // Ссылка на изображение
     type: String,
-    required: true,
+    // required: true,
+  },
+  isPromo: {
+    type: Boolean,
   },
   oldPrice: {
     // Старая цена, опционально
@@ -48,22 +51,12 @@ const DishSchema = new Schema({
     type: Boolean,
     required: true,
   },
-  createdAt: {
-    // Дата создания (мс)
-    type: Number,
-    required: true,
-  },
-  updatedAt: {
-    // Дата обновления (мс)
-    type: Number,
-    required: true,
-  },
 }, {
   timestamps: true,
 });
 
 DishSchema.methods.toJSON = function () {
-  return _.pick(this, ['dishId', 'categoryId', 'dishName', 'description', 'image', 'oldPrice', 'price', 'rating', 'likes', 'active', 'createdAt', 'updatedAt']);
+  return _.pick(this, ['categoryId', 'dishName', 'description', 'image', 'oldPrice', 'price', 'rating', 'likes', 'active']);
 };
 
 export default mongoose.model('Dish', DishSchema);

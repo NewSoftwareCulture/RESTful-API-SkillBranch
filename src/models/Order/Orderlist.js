@@ -6,12 +6,12 @@ const { Schema } = mongoose;
 const OrderListSchema = new Schema({
   userId: {
     // ID пользователя
-    type: Number,
+    type: String,
     required: true,
   },
   orderId: {
     // ID заказа
-    type: Number,
+    type: String,
     required: true,
   },
   total: {
@@ -34,16 +34,6 @@ const OrderListSchema = new Schema({
     type: Boolean,
     required: true,
   },
-  createdAt: {
-    // Дата создания (мс)
-    type: Number,
-    required: true,
-  },
-  updatedAt: {
-    // Дата обновления (мс)
-    type: Number,
-    required: true,
-  },
   items: {
     // Список блюд
     type: Array,
@@ -54,7 +44,7 @@ const OrderListSchema = new Schema({
 });
 
 OrderListSchema.methods.toJSON = function () {
-  return _.pick(this, ['userId', 'orderId', 'total', 'address', 'statusId', 'active', 'createdAt', 'updatedAt', 'items']);
+  return _.pick(this, ['userId', 'orderId', 'total', 'address', 'statusId', 'active', 'items']);
 };
 
 export default mongoose.model('OrderList', OrderListSchema);

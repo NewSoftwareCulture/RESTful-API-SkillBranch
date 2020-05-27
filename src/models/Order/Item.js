@@ -6,7 +6,7 @@ const { Schema } = mongoose;
 const ItemSchema = new Schema({
   dishId: {
     // ID блюда, опционально
-    type: Number,
+    type: String,
   },
   name: {
     // Название блюда
@@ -16,7 +16,6 @@ const ItemSchema = new Schema({
   image: {
     // Ссылка на изображение
     type: String,
-    required: true,
   },
   amount: {
     // Количество

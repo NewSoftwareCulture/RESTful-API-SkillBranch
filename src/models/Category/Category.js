@@ -6,7 +6,7 @@ const { Schema } = mongoose;
 const CategorySchema = new Schema({
   categoryId: { 
     // ID категории
-    type: Number,
+    type: String,
     required: true,
   },
   name: {
@@ -25,21 +25,11 @@ const CategorySchema = new Schema({
   },
   parent: {
     // ID родительской категории, опционально (если есть, то это подкатегория)
-    type: Number,
+    type: String,
   },
   active: {
     // Доступна ли категория (нет - удалить из бд)
     type: Boolean,
-    required: true,
-  },
-  createdAt: {
-    // Дата создания (мс)
-    type: Number,
-    required: true,
-  },
-  updatedAt: {
-    // Дата обновления (мс)
-    type: Number,
     required: true,
   },
 }, {
@@ -47,7 +37,7 @@ const CategorySchema = new Schema({
 });
 
 CategorySchema.methods.toJSON = function () {
-  return _.pick(this, ['categoryId', 'name', 'order', 'icon', 'parent', 'active', 'createdAt', 'updatedAt']);
+  return _.pick(this, ['categoryId', 'name', 'order', 'icon', 'parent', 'active']);
 };
 
 export default mongoose.model('Category', CategorySchema);

@@ -6,7 +6,7 @@ const { Schema } = mongoose;
 const StatusSchema = new Schema({
   statusId: {
     // ID статуса заказа
-    type: Number,
+    type: String,
     required: true,
   },
   name: {
@@ -29,22 +29,12 @@ const StatusSchema = new Schema({
     type: Boolean,
     required: true,
   },
-  createdAt: {
-    // Дата создания (мс)
-    type: Number,
-    required: true,
-  },
-  updatedAt: {
-    // Дата обновления (мс)
-    type: Number,
-    required: true,
-  },
 }, {
   timestamps: true,
 });
 
 StatusSchema.methods.toJSON = function () {
-  return _.pick(this, ['statusId', 'name', 'completed', 'cancelable', 'active', 'createdAt', 'updatedAt']);
+  return _.pick(this, ['statusId', 'name', 'completed', 'cancelable', 'active']);
 };
 
 export default mongoose.model('Status', StatusSchema);

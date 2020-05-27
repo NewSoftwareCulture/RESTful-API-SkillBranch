@@ -6,7 +6,7 @@ const { Schema } = mongoose;
 const ItemSchema = new Schema({
   dishId: {
     // ID блюда
-    type: Number,
+    type: String,
     required: true,
   },
   amount: {

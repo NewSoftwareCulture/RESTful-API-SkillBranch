@@ -6,12 +6,12 @@ const { Schema } = mongoose;
 const FeedbackListSchema = new Schema({
   feedbackId: {
     // ID отзыва
-    type: Number,
+    type: String,
     required: true,
   },
   dishId: {
     // ID блюда
-    type: Number,
+    type: String,
     required: true,
   },
   author: {
@@ -39,22 +39,12 @@ const FeedbackListSchema = new Schema({
     type: Boolean,
     required: true,
   },
-  createdAt: {
-    // Дата создания (мс)
-    type: Number,
-    required: true,
-  },
-  updatedAt: {
-    // Дата обновления (мс) 
-    type: Number,
-    required: true,
-  },
 }, {
   timestamps: true,
 });
 
 FeedbackListSchema.methods.toJSON = function () {
-  return _.pick(this, ['feedbackId', 'dishId', 'author', 'date', 'rating', 'text', 'active', 'createdAt', 'updatedAt']);
+  return _.pick(this, ['feedbackId', 'dishId', 'author', 'date', 'rating', 'text', 'active']);
 };
 
 export default mongoose.model('FeedbackList', FeedbackListSchema);
