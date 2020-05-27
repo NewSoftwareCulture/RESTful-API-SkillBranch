@@ -1,0 +1,319 @@
+[{
+    "id": "Burgery_Hot-dogi",
+    "name": "Бургеры и хот-доги",
+    "order": 1,
+    "icon": "https://sandbox.skill-branch.ru/sb-delivery/Burgery_Hot-dogi.svg",
+    "parent":null,
+    "active": true
+},
+{
+    "id": "Burgery",
+    "name": "Бургеры",
+    "order": 0,
+    "icon": null,
+    "parent":"Burgery_Hot-dogi",
+    "active": true
+},
+{
+    "id": "Hot-dogi",
+    "name": "Хот-доги",
+    "order": 1,
+    "icon": null,
+    "parent":"Burgery_Hot-dogi",
+    "active": true
+},
+{
+    "id": "Sendvichi",
+    "name": "Сэндвичи",
+    "order": 2,
+    "icon": null,
+    "parent":"Burgery_Hot-dogi",
+    "active": true
+},
+
+{
+    "id": "Pizza",
+    "name": "Пицца",
+    "order": 2,
+     "icon": "https://sandbox.skill-branch.ru/sb-delivery/Pizza.svg",
+    "parent":null,
+    "active": true
+},
+{
+    "id": "Tonkoe_testo",
+    "name": "Тонкое тесто",
+    "order": 0,
+    "icon": null,
+    "parent":"Pizza",
+    "active": true
+},
+{
+    "id": "Dvoinaya_nachinka",
+    "name": "Двойная начинка",
+    "order": 1,
+    "icon": null,
+    "parent":"Pizza",
+    "active": true
+},
+{
+    "id": "Tolstoe_testo",
+    "name": "Толстое тесто",
+    "order": 2,
+    "icon": null,
+    "parent":"Pizza",
+    "active": true
+},
+
+{
+    "id": "Suwi_i_Rolly",
+    "name": "Суши и роллы",
+    "order": 3,
+     "icon": "https://sandbox.skill-branch.ru/sb-delivery/Suwi_i_Rolly.svg",
+    "parent":null,
+    "active": true
+},
+{
+    "id": "Suwi",
+    "name": "Суши",
+    "order": 0,
+     "icon": null,
+    "parent":"Suwi_i_Rolly",
+    "active": true
+},
+{
+    "id": "Rolly",
+    "name": "Роллы",
+    "order": 1,
+     "icon": null,
+    "parent":"Suwi_i_Rolly",
+    "active": true
+},
+{
+    "id": "Kombo",
+    "name": "Комбо",
+    "order": 2,
+     "icon": null,
+    "parent":"Suwi_i_Rolly",
+    "active": true
+},
+
+{
+    "id": "Zavtraki",
+    "name": "Завтраки",
+    "order": 4,
+     "icon": "https://sandbox.skill-branch.ru/sb-delivery/Zavtraki.svg",
+    "parent":null,
+    "active": true
+},
+
+{
+    "id": "Supy",
+    "name": "Супы",
+    "order": 5,
+     "icon": "https://sandbox.skill-branch.ru/sb-delivery/Supy.svg",
+    "parent":null,
+    "active": true
+},
+
+{
+    "id": "Osnovnoe_bludo",
+    "name": "Основное блюдо",
+    "order": 6,
+     "icon": "https://sandbox.skill-branch.ru/sb-delivery/Osnovnoe_bludo.svg",
+    "parent":null,
+    "active": true
+},
+{
+    "id": "Ryba",
+    "name": "Рыба",
+    "order": 0,
+     "icon": null,
+    "parent":"Osnovnoe_bludo",
+    "active": true
+},
+{
+    "id": "Ptyca",
+    "name": "Птица",
+    "order": 1,
+     "icon": null,
+    "parent":"Osnovnoe_bludo",
+    "active": true
+},
+{
+    "id": "Myaso",
+    "name": "Мясо",
+    "order": 2,
+     "icon": null,
+    "parent":"Osnovnoe_bludo",
+    "active": true
+},
+
+{
+    "id": "Garniry",
+    "name": "Гарниры",
+    "order": 6,
+     "icon": "https://sandbox.skill-branch.ru/sb-delivery/Garniry.svg",
+    "parent":null,
+    "active": true
+},
+
+{
+    "id": "Pasta",
+    "name": "Паста",
+    "order": 7,
+     "icon": "https://sandbox.skill-branch.ru/sb-delivery/Pasta.svg",
+    "parent":null,
+    "active": true
+},
+
+{
+    "id": "Pelmeni",
+    "name": "Пельмени",
+    "order": 8,
+     "icon": "https://sandbox.skill-branch.ru/sb-delivery/Pelmeni.svg",
+    "parent":null,
+    "active": true
+},
+
+{
+    "id": "Salaty",
+    "name": "Салаты",
+    "order": 9,
+     "icon": "https://sandbox.skill-branch.ru/sb-delivery/Salaty.svg",
+    "parent":null,
+    "active": true
+},
+
+{
+    "id": "Salaty",
+    "name": "Салаты",
+    "order": 9,
+     "icon": "https://sandbox.skill-branch.ru/sb-delivery/Salaty.svg",
+    "parent":null,
+    "active": true
+},
+
+{
+    "id": "Deserty",
+    "name": "Десерты",
+    "order": 10,
+     "icon": "https://sandbox.skill-branch.ru/sb-delivery/Deserty.svg",
+    "parent":null,
+    "active": true
+},
+{
+    "id": "Klassicheskie_pirogi",
+    "name": "Классические пироги",
+    "order": 0,
+     "icon": null,
+    "parent":"Deserty",
+    "active": true
+},
+{
+    "id": "Sloenye_pirogi",
+    "name": "Слоеные пироги",
+    "order": 1,
+     "icon": null,
+    "parent":"Deserty",
+    "active": true
+},
+{
+    "id": "Sladkie_pirogi",
+    "name": "Сладкие пироги",
+    "order": 2,
+     "icon": null,
+    "parent":"Deserty",
+    "active": true
+},
+{
+    "id": "Melkaya_vypechka",
+    "name": "Мелкая выпечка",
+    "order": 3,
+     "icon": null,
+    "parent":"Deserty",
+    "active": true
+},
+{
+    "id": "Torty",
+    "name": "Торты",
+    "order": 4,
+     "icon": null,
+    "parent":"Deserty",
+    "active": true
+},
+{
+    "id": "Pirojnye",
+    "name": "Пирожные",
+    "order": 5,
+     "icon": null,
+    "parent":"Deserty",
+    "active": true
+},
+
+{
+    "id": "Zakuski",
+    "name": "Закуски",
+    "order": 11,
+     "icon": "https://sandbox.skill-branch.ru/sb-delivery/Zakuski.svg",
+    "parent":null,
+    "active": true
+},
+{
+    "id": "Holodnye_zakuski",
+    "name": "Холодные закуски",
+    "order": 0,
+     "icon": null,
+    "parent":"Zakuski",
+    "active": true
+},
+{
+    "id": "Goryachie_zakuski",
+    "name": "Горячие закуски",
+    "order": 1,
+     "icon": null,
+    "parent":"Zakuski",
+    "active": true
+},
+
+{
+    "id": "Bluda_na_grile",
+    "name": "Блюда на гриле",
+    "order": 12,
+     "icon": "https://sandbox.skill-branch.ru/sb-delivery/Bluda_na_grile.svg",
+    "parent":null,
+    "active": true
+},
+{
+    "id": "Wawlyk",
+    "name": "Шашлык",
+    "order": 0,
+     "icon": null,
+    "parent":"Bluda_na_grile",
+    "active": true
+},
+{
+    "id": "Steiki",
+    "name": "Стейки",
+    "order": 1,
+     "icon": null,
+    "parent":"Bluda_na_grile",
+    "active": true
+},
+
+{
+    "id": "Sousy",
+    "name": "Соусы",
+    "order": 13,
+     "icon": "https://sandbox.skill-branch.ru/sb-delivery/Sousy.svg",
+    "parent":null,
+    "active": true
+},
+
+{
+    "id": "Napitki",
+    "name": "Напитки",
+    "order": 14,
+     "icon": "https://sandbox.skill-branch.ru/sb-delivery/Napitki.svg",
+    "parent":null,
+    "active": true
+}]

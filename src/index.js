@@ -34,6 +34,7 @@ app.use(middlewares.reviews);
 app.use(middlewares.cart);
 app.use(middlewares.check);
 app.use(middlewares.orders);
+app.use(middlewares.uploadData);
 
 app.listen(3000, () => {
     Logger('Example app listening on port 3000!\n ________________________\n|                        |\n| http://localhost:3000/ |\n|________________________|\n');
