@@ -4,7 +4,7 @@ import Logger from './Logger';
 
 const router = AsyncRouter();
 
-const User = models.User;
+const User = models.Order;
 
 router.post('/orders/new', async(req, res) => {
 

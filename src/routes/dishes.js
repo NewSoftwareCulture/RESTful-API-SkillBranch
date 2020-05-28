@@ -8,11 +8,11 @@ const Dish = models.Dish;
 
 // TODO: 'If-Modified-Since'
 // StatusCode
-router.get('/main/recommend?:offset?:limit', async(req, res) => {
+router.get('/dishes?:offset?:limit', async(req, res) => {
     const offset = Number(req.query.offset) || 0;
     const limit = Number(req.query.limit) || 10;
-    Logger.GET(`/main/recommend?offset=${offset}&limit=${limit}`);
-    const dishes = await Dish.find({isRecomendation: true}).skip(offset).limit(limit);
+    Logger.GET(`/dishes?offset=${offset}&limit=${limit}`);
+    const dishes = await Dish.find().skip(offset).limit(limit);
     let result = dishes.map(element => {
         return {
             id: element._id,
@@ -25,8 +25,8 @@ router.get('/main/recommend?:offset?:limit', async(req, res) => {
             likes: element.likes,
             category: element.category,
             active: element.active,
-            createdAt: element.createdAt,
-            updatedAt: element.updatedAt,
+            createdAt: Date.parse(element.createdAt),
+            updatedAt: Date.parse(element.updatedAt),
         };
     });
     res.json(result);

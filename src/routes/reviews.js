@@ -21,8 +21,8 @@ router.get('/reviews?:offset?:limit', async(req, res) => {
             rating: element.rating,
             text: element.text,
             active: element.active,
-            createdAt: element.createdAt,
-            updatedAt: element.updatedAt,
+            createdAt: Date.parse(element.createdAt),
+            updatedAt: Date.parse(element.updatedAt),
         };
     });
     res.json(result);

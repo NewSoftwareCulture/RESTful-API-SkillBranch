@@ -20,8 +20,8 @@ router.get('/categories?:offset?:limit', async(req, res) => {
             icon: element.icon,
             parent: element.parent,
             active: element.active,
-            createdAt: element.createdAt,
-            updatedAt: element.updatedAt,
+            createdAt: Date.parse(element.createdAt),
+            updatedAt: Date.parse(element.updatedAt),
         };
     });
     res.json(result);

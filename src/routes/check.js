@@ -8,10 +8,10 @@ const User = models.User;
 
 router.post('/address/input', async(req, res) => {
 
-})
+});
 
 router.post('/address/coordinates', async(req, res) => {
 
-})
+});
 
 module.exports = router;
