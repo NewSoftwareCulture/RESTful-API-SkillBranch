@@ -16,7 +16,7 @@ async function checkEmail(email) {
 // TODO:
 // StatusCode
 // JWT
-// Добавить шифрацию на пароль 
+// Password en(cript)
 router.post('/auth/register', async(req, res) => {
     Logger.POST('/auth/register');
     const firstName = req.body.firstName;

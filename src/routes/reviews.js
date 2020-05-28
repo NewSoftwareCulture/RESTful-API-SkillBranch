@@ -7,6 +7,8 @@ const router = AsyncRouter();
 const Review = models.Review;
 
 // TODO: 'If-Modified-Since'
+// StatusCode
+// JWT
 router.get('/reviews?:offset?:limit', async(req, res) => {
     const offset = Number(req.query.offset) || 0;
     const limit = Number(req.query.limit) || 10;
@@ -28,7 +30,6 @@ router.get('/reviews?:offset?:limit', async(req, res) => {
     res.json(result);
 });
 
-// TODO: StatusCode, JWT
 router.post('/reviews/new', async(req, res) => {
     Logger.POST('/reviews/new');
     const dishId = req.body.dishId;

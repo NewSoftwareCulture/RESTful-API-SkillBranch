@@ -6,6 +6,8 @@ const router = AsyncRouter();
 
 const User = models.User;
 
+// Password (en)crypt
+// StatusCode
 router.post('/auth/login', async(req, res) => {
     Logger.POST('/auth/login');
 

@@ -6,7 +6,7 @@ import cors from 'cors';
 import routes from './routes/index';
 import Logger from './routes/Logger';
 
-const uri = "mongodb://localhost:27017/skillbranch_db";
+const uri = process.env.URI || "mongodb://localhost:27017/skillbranch_db";
 const port = process.env.PORT || 3000;
 
 mongoose.Promise = Promise;
