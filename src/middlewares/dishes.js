@@ -7,6 +7,7 @@ const router = AsyncRouter();
 const Dish = models.Dish;
 
 // TODO: 'If-Modified-Since'
+// StatusCode
 router.get('/dishes?:offset?:limit', async(req, res) => {
     const offset = Number(req.query.offset) || 0;
     const limit = Number(req.query.limit) || 10;

@@ -24,6 +24,9 @@ const DishSchema = new Schema({
     type: String,
     // required: true,
   },
+  isRecomendation: {
+    type: Boolean,
+  },
   isPromo: {
     type: Boolean,
   },

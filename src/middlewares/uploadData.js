@@ -18,7 +18,6 @@ async function checkCategoryId(id) {
 
 async function uploadCategory() {
     dataCategories.forEach(async (element) => {
-        Logger(element);
         if (await checkCategoryId(element.id)) {
             const category = new Category({
                 categoryId: element.id,
@@ -47,6 +46,7 @@ async function uploadDish(dataDishes) {
                 description: element.description,
                 image: element.image,
                 isPromo: element.isPromo,
+                isRecomendation: element.isRecomendation,
                 oldPrice: element.oldPrice,
                 price: element.price,
                 rating: element.rating,
