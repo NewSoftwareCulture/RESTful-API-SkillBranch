@@ -14,8 +14,8 @@ async function checkEmail(email) {
 };
 
 // TODO:
-// Добавить статус коды
-// Добавить реализацию токенов через jwt
+// StatusCode
+// JWT
 // Добавить шифрацию на пароль 
 router.post('/auth/register', async(req, res) => {
     Logger.POST('/auth/register');
@@ -37,7 +37,7 @@ router.post('/auth/register', async(req, res) => {
         let user = new User(result);
         await user.save();
 
-        Logger.db('User created!')
+        Logger.db('User created!');
 
         user = await User.findOne({email: email});        
         result['id'] =  user._id;

@@ -1,5 +1,4 @@
 module.exports = {
-    auth: require('./auth'),
     login: require('./login'),
     register: require('./register'),
     recovery: require('./recovery'),

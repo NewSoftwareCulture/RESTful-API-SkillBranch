@@ -4,10 +4,27 @@ import Logger from './Logger';
 
 const router = AsyncRouter();
 
-const User = models.User;
+const Category = models.Category;
 
-router.get('/categories', async(req, res) => {
-
+// TODO: 'If-Modified-Since'
+router.get('/categories?:offset?:limit', async(req, res) => {
+    const offset = Number(req.query.offset) || 0;
+    const limit = Number(req.query.limit) || 10;
+    Logger.GET(`/categories?offset=${offset}&limit=${limit}`);
+    const category = await Category.find().skip(offset).limit(limit);
+    let result = category.map(element => {
+        return {
+            categoryId: element.categoryId,
+            name: element.name,
+            order: element.order,
+            icon: element.icon,
+            parent: element.parent,
+            active: element.active,
+            createdAt: element.createdAt,
+            updatedAt: element.updatedAt,
+        };
+    });
+    res.json(result);
 });
 
 module.exports = router;
