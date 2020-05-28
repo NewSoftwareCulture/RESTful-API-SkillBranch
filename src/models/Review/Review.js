@@ -3,12 +3,7 @@ import _ from 'lodash';
 
 const { Schema } = mongoose;
 
-const FeedbackListSchema = new Schema({
-  feedbackId: {
-    // ID отзыва
-    type: String,
-    required: true,
-  },
+const ReviewsSchema = new Schema({
   dishId: {
     // ID блюда
     type: String,
@@ -32,7 +27,6 @@ const FeedbackListSchema = new Schema({
   text: {
     // Текст отзыва, опционально
     type: String,
-    required: true,
   },
   active: {
     // Доступен ли отзыв (нет - удалить из бд)
@@ -43,8 +37,8 @@ const FeedbackListSchema = new Schema({
   timestamps: true,
 });
 
-FeedbackListSchema.methods.toJSON = function () {
-  return _.pick(this, ['feedbackId', 'dishId', 'author', 'date', 'rating', 'text', 'active']);
+ReviewsSchema.methods.toJSON = function () {
+  return _.pick(this, ['dishId', 'author', 'date', 'rating', 'text', 'active']);
 };
 
-export default mongoose.model('FeedbackList', FeedbackListSchema);
+export default mongoose.model('Reviews', ReviewsSchema);
