@@ -14,11 +14,6 @@ const StatusSchema = new Schema({
     type: String,
     required: true,
   },
-  completed: {
-    // Выполнен ли заказ
-    type: Boolean,
-    required: true,
-  },
   cancelable: {
     // Возможно ли отменить заказ
     type: Boolean,
@@ -34,7 +29,7 @@ const StatusSchema = new Schema({
 });
 
 StatusSchema.methods.toJSON = function () {
-  return _.pick(this, ['statusId', 'name', 'completed', 'cancelable', 'active']);
+  return _.pick(this, ['statusId', 'name', 'cancelable', 'active']);
 };
 
 export default mongoose.model('Status', StatusSchema);

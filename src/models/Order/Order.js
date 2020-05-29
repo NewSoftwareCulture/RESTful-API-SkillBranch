@@ -53,6 +53,11 @@ const OrderSchema = new Schema({
     type: Boolean,
     required: true,
   },
+  completed: {
+    // Выполнен ли заказ
+    type: Boolean,
+    required: true,
+  },
   items: {
     // Список блюд
     type: Array,
@@ -62,7 +67,7 @@ const OrderSchema = new Schema({
 });
 
 OrderSchema.methods.toJSON = function () {
-  return _.pick(this, ['orderId','userId', 'total', 'address', 'entrance', 'floor', 'apartment', 'intercom', 'comment', 'statusId', 'active', 'items']);
+  return _.pick(this, ['orderId','userId', 'total', 'address', 'entrance', 'floor', 'apartment', 'intercom', 'comment', 'statusId', 'active', 'comlited', 'items']);
 };
 
 export default mongoose.model('Order', OrderSchema);
