@@ -10,7 +10,7 @@ const uri = process.env.URI || "mongodb://localhost:27017/skillbranch_db";
 const port = process.env.PORT || 3000;
 
 mongoose.Promise = Promise;
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false})
     .then(() => {
         Logger.db('Connected!');
     })
@@ -26,7 +26,7 @@ app.use(routes.login);
 app.use(routes.register);
 app.use(routes.recovery);
 app.use(routes.refresh);
-app.use(routes.changePassword);
+app.use(routes.profile);
 app.use(routes.favorite);
 app.use(routes.recommended);
 app.use(routes.categories);

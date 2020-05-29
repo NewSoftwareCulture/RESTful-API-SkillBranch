@@ -3,7 +3,7 @@ module.exports = {
     register: require('./register'),
     recovery: require('./recovery'),
     refresh: require('./refresh'),
-    changePassword: require('./changePassword'),
+    profile: require('./profile'),
     favorite: require('./favorite'),
     recommended: require('./recommended'),
     categories: require('./categories'),
