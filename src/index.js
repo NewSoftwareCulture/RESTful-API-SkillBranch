@@ -6,6 +6,7 @@ import cors from 'cors';
 import routes from './routes/index';
 import Logger from './routes/Logger';
 
+process.env.USERID = '5ed10835038fa81e98741d66';
 const uri = process.env.URI || "mongodb://localhost:27017/skillbranch_db";
 const port = process.env.PORT || 3000;
 

@@ -24,7 +24,7 @@ const FavoriteSchema = new Schema({
 });
 
 FavoriteSchema.methods.toJSON = function () {
-  return _.pick(this, ['userId', 'dishId', 'favorite', 'updatedAt']);
+  return _.pick(this, ['userId', 'dishId', 'favorite']);
 };
 
 export default mongoose.model('Favourite', FavoriteSchema);

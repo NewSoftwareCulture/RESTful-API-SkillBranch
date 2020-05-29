@@ -5,6 +5,8 @@ import Logger from './Logger';
 const router = AsyncRouter();
 
 const Review = models.Review;
+const Dish = models.Dish;
+const User = models.User;
 
 // TODO: 'If-Modified-Since'
 // StatusCode
@@ -30,25 +32,44 @@ router.get('/reviews?:offset?:limit', async(req, res) => {
     res.json(result);
 });
 
+async function checkDishId(dishId){
+    Logger.work('Check Id');
+    if(dishId.length === 24) return true;
+    Logger.ERROR('Type DishId not ObjectId');
+    return false;
+}
+
+async function checkDish(dishId) {
+    Logger.work('Check dish');
+    const dish = await Dish.findOne({_id: dishId});
+    if(dish) return true;
+    Logger.ERROR('Dish not found');
+    return false;
+};
+
 router.post('/reviews/new', async(req, res) => {
     Logger.POST('/reviews/new');
     const dishId = req.body.dishId;
-    const rating = req.body.rating;
-    const text = req.body.text;
-    const author = 'Vlad'; // JWT
-    const date = new Date();
-    const active = true;
-    const review = new Review({
-        dishId,
-        rating,
-        text,
-        author,
-        date,
-        active,
-    });
-    await review.save();
-    Logger.db('Review created!');
-    res.status(201);
+    if(await checkDishId(dishId) && await checkDish(dishId)){
+        const rating = req.body.rating;
+        const text = req.body.text;
+        const userId = process.env.USERID || '5eced428cb0ecd4bae119125';  // JWT
+        const user = await User.findOne({_id: userId});
+        const author = user.firstName + ' ' + user.lastName; // JWT
+        const date = new Date();
+        const active = true;
+        const review = new Review({
+            dishId,
+            rating,
+            text,
+            author,
+            date,
+            active,
+        });
+        await review.save();
+        Logger.db('Review created!');
+        res.status(201);
+    };
 });
 
 module.exports = router;
