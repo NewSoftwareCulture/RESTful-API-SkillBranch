@@ -17,7 +17,7 @@ const Status = models.Status;
 // "If-Modified-Since"
 router.post('/orders/new', async(req, res, next) => {
     Logger.POST('/orders/new');
-    const userId = '5eced484cb0ecd4bae119127'; //JWT
+    const userId = process.env.USERID || '5eced484cb0ecd4bae119127'; //JWT
     const address = req.body.address;
     const entrance = req.body.entrance;
     const floor = req.body.floor;
@@ -57,6 +57,7 @@ router.post('/orders/new', async(req, res, next) => {
             comment,    
             statusId: statusId,
             active: true,
+            completed: false,
             items,
         });
         await order.save();
@@ -64,7 +65,6 @@ router.post('/orders/new', async(req, res, next) => {
         const status = new Status({
             statusId,
             name: 'В обработке',
-            completed: false,
             cancelable: true,
             active: true,
         });
@@ -78,6 +78,7 @@ router.post('/orders/new', async(req, res, next) => {
             address: order.address,
             statusId: order.statusId,
             active: order.active,
+            completed: order.completed,
             createdAt: Date.parse(order.createdAt),
             updatedAt: Date.parse(order.updatedAt),
             items: order.items,
@@ -89,7 +90,7 @@ router.get('/orders?:offset?:limit', async(req, res) => {
     const offset = Number(req.query.offset) || 0;
     const limit = Number(req.query.limit) || 10;
     Logger.GET(`/orders?offset=${offset}&limit=${limit}`);
-    const userId = '5eced484cb0ecd4bae119127';  // JWT
+    const userId = process.env.USERID || '5eced484cb0ecd4bae119127';  // JWT
     const orders = await Order.find({userId: userId}).skip(offset).limit(limit);
     let result = orders.map(element => {
         return {
@@ -98,6 +99,7 @@ router.get('/orders?:offset?:limit', async(req, res) => {
             address: element.address,
             statusId: element.statusId,
             active: element.active,
+            completed: element.completed,
             createdAt: Date.parse(element.createdAt),
             updatedAt: Date.parse(element.updatedAt),
             items: element.items,
@@ -113,7 +115,6 @@ router.get('/orders/statuses', async(req, res) => {
         return {
             id: element.statusId,
             name: element.name,
-            completed: element.completed,
             cancelable: element.cancelable,
             active: element.active,
             createdAt: Date.parse(element.createdAt),
@@ -127,19 +128,22 @@ router.get('/orders/statuses', async(req, res) => {
 router.put('/orders/cancel', async(req, res) => {
     Logger.PUT('/orders/cancel');
     const orderId = req.body.orderId;
-    const userId = '5eced484cb0ecd4bae119127';  // JWT
+    const userId = process.env.USERID || '5eced484cb0ecd4bae119127';  // JWT
     const order = await Order.findOne({orderId: orderId, userId: userId});
     if(order !== null){
-        const statusId = order.statusId;
-        // Удаление заказа и его статуса
-        // await Order.deleteOne({orderId: orderId});
-        // await Status.deleteOne({statusId: statusId});
+        await Order.findOneAndUpdate({orderId: orderId}, {
+            completed: true,
+        });
+        await Status.findOneAndUpdate({statusId: order.statusId}, {
+            name: 'Отменен',
+        });
         res.json({
             id: orderId,
             total: order.total,
             address: order.address,
             statusId: order.statusId,
             active: order.active,
+            completed: true,
             createdAt: Date.parse(order.createdAt),
             updatedAt: Date.parse(order.updatedAt),
             items: order.items,
