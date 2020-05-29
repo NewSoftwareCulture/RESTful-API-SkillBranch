@@ -6,8 +6,6 @@ module.exports = {
       Favorite: require('./Favorite/Favorite').default,
       Review: require('./Review/Review').default,
       Order: require('./Order/Order').default,
-      OrderList: require('./Order/Orderlist').default,
-      OrderItem: require('./Order/Item').default,
       Status: require('./Order/Status').default,
       User: require('./User/User').default
 };

@@ -6,7 +6,7 @@ const { Schema } = mongoose;
 const StatusSchema = new Schema({
   statusId: {
     // ID статуса заказа
-    type: String,
+    type: Schema.Types.ObjectId,
     required: true,
   },
   name: {
@@ -21,7 +21,7 @@ const StatusSchema = new Schema({
   },
   cancelable: {
     // Возможно ли отменить заказ
-    type: String,
+    type: Boolean,
     required: true,
   },
   active: {

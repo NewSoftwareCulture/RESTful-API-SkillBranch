@@ -4,13 +4,22 @@ import _ from 'lodash';
 const { Schema } = mongoose;
 
 const OrderSchema = new Schema({
+  orderId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+  },
   userId: {
     // ID пользователя
     type: String,
     required: true,
   },
+  total: {
+    // Стоимость заказа
+    type: Number,
+    required: true,
+  },
   address: {
-    // Адрес доставки
+    // Адрес
     type: String,
     required: true,
   },
@@ -34,12 +43,26 @@ const OrderSchema = new Schema({
     // Комментарий, опционально
     type: String,
   },
+  statusId: {
+    // ID статуса заказа
+    type: String,
+    required: true,
+  },
+  active: {
+    // Доступен ли заказ (нет - удалить из бд)
+    type: Boolean,
+    required: true,
+  },
+  items: {
+    // Список блюд
+    type: Array,
+  },
 }, {
   timestamps: true,
 });
 
 OrderSchema.methods.toJSON = function () {
-  return _.pick(this, ['userId', 'address', 'entrance', 'floor', 'apartment', 'intercom', 'comment']);
+  return _.pick(this, ['orderId','userId', 'total', 'address', 'entrance', 'floor', 'apartment', 'intercom', 'comment', 'statusId', 'active', 'items']);
 };
 
 export default mongoose.model('Order', OrderSchema);
