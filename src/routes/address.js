@@ -1,4 +1,5 @@
 import { AsyncRouter } from 'express-async-router';
+import axios from 'axios';
 import Logger from './Logger';
 
 const router = AsyncRouter();
@@ -28,12 +29,14 @@ router.post('/address/coordinates', async(req, res) => {
     Logger.POST('/address/coordinates');
     const lat = req.body.lat || '55.757692';
     const lon = req.body.lon || '37.612067';
-    var request = require('request');
+    const AUTH_TOKEN = '';
     await axios({
         method: 'post',
         url: "https://suggestions.dadata.ru/suggestions/api/4_1/rs/geolocate/address",
         headers: {
-            'Authorization': AUTH_TOKEN,
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": `Token ${AUTH_TOKEN}`,
         },
         data: {
             lat: lat,
