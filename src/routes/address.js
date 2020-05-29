@@ -22,24 +22,26 @@ router.post('/address/input', async(req, res) => {
     const address = req.body.address;
     await parseAddress(address, res);
 });
+
 // Добавить токен авторизации
 router.post('/address/coordinates', async(req, res) => {
     Logger.POST('/address/coordinates');
     const lat = req.body.lat || '55.757692';
     const lon = req.body.lon || '37.612067';
     var request = require('request');
-    await request({
-        method: 'POST',
-        url: 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/geolocate/address',
+    await axios({
+        method: 'post',
+        url: "https://suggestions.dadata.ru/suggestions/api/4_1/rs/geolocate/address",
         headers: {
-            'Content-Type': 'application/json'
-    },
-        body: `{  \"lat\": ${lat},  \"lon\": ${lon}}`
-    }, async (error, response, body) => {
-        console.log('Status:', response.statusCode);
-        console.log('Headers:', JSON.stringify(response.headers));
-        console.log('Response:', body);
-        const address = body.suggestions[0].value;
+            'Authorization': AUTH_TOKEN,
+        },
+        data: {
+            lat: lat,
+            lon: lon,
+        },
+    }).then(async(response) => {
+        console.log(response.data);
+        const address = response.data.suggestions[0].value; // Убедиться
         await parseAddress(address, res);
     });
 });

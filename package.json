@@ -23,6 +23,7 @@
     "extends": "airbnb-base"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "bluebird": "^3.7.2",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
@@ -30,8 +31,7 @@
     "express-async-router": "^0.1.15",
     "lodash": "^4.17.15",
     "mongoose": "^5.9.15",
-    "nodemailer": "^6.4.8",
-    "request": "^2.88.2"
+    "nodemailer": "^6.4.8"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
