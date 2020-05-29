@@ -143,7 +143,7 @@ router.put('/orders/cancel', async(req, res) => {
             address: order.address,
             statusId: order.statusId,
             active: order.active,
-            completed: true,
+            completed: false,
             createdAt: Date.parse(order.createdAt),
             updatedAt: Date.parse(order.updatedAt),
             items: order.items,

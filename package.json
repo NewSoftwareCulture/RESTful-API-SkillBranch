@@ -29,7 +29,9 @@
     "express": "^4.17.1",
     "express-async-router": "^0.1.15",
     "lodash": "^4.17.15",
-    "mongoose": "^5.9.15"
+    "mongoose": "^5.9.15",
+    "nodemailer": "^6.4.8",
+    "request": "^2.88.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

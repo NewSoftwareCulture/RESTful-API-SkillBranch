@@ -10,7 +10,7 @@ module.exports = {
     dishes: require('./dishes'),
     reviews: require('./reviews'),
     cart: require('./cart'),
-    check: require('./check'),
+    address: require('./address'),
     orders: require('./orders'),
     uploadData: require('./uploadData'),
 }

@@ -7,5 +7,6 @@ module.exports = {
       Review: require('./Review/Review').default,
       Order: require('./Order/Order').default,
       Status: require('./Order/Status').default,
-      User: require('./User/User').default
+      User: require('./User/User').default,
+      Code: require('./Code/Code').default,
 };

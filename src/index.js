@@ -34,7 +34,7 @@ app.use(routes.categories);
 app.use(routes.dishes);
 app.use(routes.reviews);
 app.use(routes.cart);
-app.use(routes.check);
+app.use(routes.address);
 app.use(routes.orders);
 app.use(routes.uploadData);
 
