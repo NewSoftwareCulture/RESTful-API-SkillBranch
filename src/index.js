@@ -3,12 +3,13 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import Promise from 'bluebird';
 import cors from 'cors';
+import passport from 'passport';
 import routes from './routes/index';
 import Logger from './routes/Logger';
+import config from '../config';
 
-process.env.USERID = '5ed10835038fa81e98741d66';
-const uri = process.env.URI || "mongodb://localhost:27017/skillbranch_db";
-const port = process.env.PORT || 3000;
+const uri = config.db.uri;
+const port = config.port;
 
 mongoose.Promise = Promise;
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false})
@@ -20,6 +21,9 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useCrea
     })
 
 const app = express();
+app.use(passport.initialize());
+require('./middleware/passport')(passport);
+
 app.use(bodyParser.json());
 app.use(cors());
 
