@@ -1,4 +1,5 @@
 import { AsyncRouter } from 'express-async-router';
+import passport from 'passport';
 import models from '../models/models';
 import Logger from './Logger';
 
@@ -10,7 +11,6 @@ const User = models.User;
 
 // TODO: 'If-Modified-Since'
 // StatusCode
-// JWT
 router.get('/reviews?:offset?:limit', async(req, res) => {
     const offset = Number(req.query.offset) || 0;
     const limit = Number(req.query.limit) || 10;
@@ -47,15 +47,15 @@ async function checkDish(dishId) {
     return false;
 };
 
-router.post('/reviews/new', async(req, res) => {
+router.post('/reviews/new', passport.authenticate('jwt', {session: false}), async(req, res) => {
     Logger.POST('/reviews/new');
     const dishId = req.body.dishId;
     if(await checkDishId(dishId) && await checkDish(dishId)){
         const rating = req.body.rating;
         const text = req.body.text;
-        const userId = process.env.USERID || '5eced428cb0ecd4bae119125';  // JWT
+        const userId = req.user._id;
         const user = await User.findOne({_id: userId});
-        const author = user.firstName + ' ' + user.lastName; // JWT
+        const author = user.firstName + ' ' + user.lastName;
         const date = new Date();
         const active = true;
         const review = new Review({

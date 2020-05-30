@@ -1,4 +1,5 @@
 import { AsyncRouter } from 'express-async-router';
+import passport from 'passport';
 import mongoose from 'mongoose';
 import Promise from 'bluebird';
 import models from '../models/models';
@@ -15,9 +16,9 @@ const Status = models.Status;
 // JWT
 // StatusCode
 // "If-Modified-Since"
-router.post('/orders/new', async(req, res, next) => {
+router.post('/orders/new', passport.authenticate('jwt', {session: false}), async(req, res, next) => {
     Logger.POST('/orders/new');
-    const userId = process.env.USERID || '5eced484cb0ecd4bae119127'; //JWT
+    const userId = req.user._id;
     const address = req.body.address;
     const entrance = req.body.entrance;
     const floor = req.body.floor;
@@ -86,11 +87,11 @@ router.post('/orders/new', async(req, res, next) => {
     });
 });
 
-router.get('/orders?:offset?:limit', async(req, res) => {
+router.get('/orders?:offset?:limit', passport.authenticate('jwt', {session: false}), async(req, res) => {
     const offset = Number(req.query.offset) || 0;
     const limit = Number(req.query.limit) || 10;
     Logger.GET(`/orders?offset=${offset}&limit=${limit}`);
-    const userId = process.env.USERID || '5eced484cb0ecd4bae119127';  // JWT
+    const userId = req.user._id;
     const orders = await Order.find({userId: userId}).skip(offset).limit(limit);
     let result = orders.map(element => {
         return {
@@ -125,10 +126,10 @@ router.get('/orders/statuses', async(req, res) => {
     
 });
 
-router.put('/orders/cancel', async(req, res) => {
+router.put('/orders/cancel', passport.authenticate('jwt', {session: false}), async(req, res) => {
     Logger.PUT('/orders/cancel');
     const orderId = req.body.orderId;
-    const userId = process.env.USERID || '5eced484cb0ecd4bae119127';  // JWT
+    const userId = req.user._id;
     const order = await Order.findOne({orderId: orderId, userId: userId});
     if(order !== null){
         await Order.findOneAndUpdate({orderId: orderId}, {

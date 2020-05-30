@@ -1,6 +1,7 @@
 import { AsyncRouter } from 'express-async-router';
 import models from '../models/models';
 import Logger from './Logger';
+import config from '../../config';
 
 const router = AsyncRouter();
 
@@ -10,10 +11,10 @@ const User = models.User;
 var nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-  service: 'yandex',
+  service: config.email.service,
   auth: {
-    user: process.env.LOGIN_EMAIL || 'testermajler@yandex.ru',
-    pass: process.env.PASS_EMAIL || '12345678test'
+    user: config.email.login,
+    pass: config.email.password,
   }
 });
 
@@ -24,10 +25,10 @@ async function sendCode(email) {
     const code = String(await codeGener());
     Logger.work(`Recovery code: ${code}`);
     transporter.sendMail({
-        from: process.env.LOGIN_EMAIL || 'testermajler@yandex.ru',
+        from: config.email.login,
         to: email,
-        subject: 'Recovery code Skillbranch',
-        text: code,
+        subject: config.email.title,
+        text: `Recovery code: ${code}`,
     });
     return code;
 };

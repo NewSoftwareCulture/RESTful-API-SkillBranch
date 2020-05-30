@@ -1,4 +1,5 @@
 import { AsyncRouter } from 'express-async-router';
+import passport from 'passport';
 import Promise from 'bluebird';
 import models from '../models/models';
 import Logger from './Logger';
@@ -11,9 +12,8 @@ const Promo = models.Promo;
 
 // TODO: 
 // StatusCode
-// JWT
-router.get('/cart', async(req, res) => {
-    const userId = process.env.USERID || '5eced428cb0ecd4bae119125'; //JWT
+router.get('/cart', passport.authenticate('jwt', {session: false}), async(req, res) => {
+    const userId = req.user._id;
     const cart = await Cart.findOne({userId: userId});
     if(cart) {
         const result = {
@@ -49,9 +49,9 @@ async function checkDish(dishId) {
     return false;
 };
 
-router.put('/cart', async(req, res) => {
+router.put('/cart', passport.authenticate('jwt', {session: false}), async(req, res) => {
     Logger.PUT('/cart');
-    const userId = process.env.USERID || '5eced484cb0ecd4bae119127'; // JWT
+    const userId = req.user._id;
     const cart = await Cart.findOne({userId: userId});
     const code = req.body.promocode || '';
     const promo = promocode != '' ? await getPromo(code) : '';

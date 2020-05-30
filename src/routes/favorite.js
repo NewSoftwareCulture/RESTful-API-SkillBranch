@@ -1,5 +1,5 @@
 import { AsyncRouter } from 'express-async-router';
-import mongoose from 'mongoose';
+import passport from 'passport';
 import Promise from 'bluebird';
 import models from '../models/models';
 import Logger from './Logger';
@@ -9,13 +9,13 @@ const router = AsyncRouter();
 const Favorite = models.Favorite;
 const Dish = models.Dish;
 
-// TODO: JWT
+// TODO:
 // StatusCode
-router.get('/favorite?:offset?:limit', async(req, res) => {
+router.get('/favorite?:offset?:limit', passport.authenticate('jwt', {session: false}), async(req, res) => {
     const offset = Number(req.query.offset) || 0;
     const limit = Number(req.query.limit) || 10;
     Logger.GET(`/favorite?offset=${offset}&limit=${limit}`);
-    const userId = process.env.USERID || '5eced428cb0ecd4bae119125';  // JWT
+    const userId = req.user._id;
     const favorites = await Favorite.find({userId: userId, favorite: true}).skip(offset).limit(limit);
     let result = favorites.map(element => {
         return {
@@ -42,9 +42,9 @@ async function checkDish(dishId) {
     return false;
 };
 
-router.put('/favorite/change', async(req, res) => {
+router.put('/favorite/change', passport.authenticate('jwt', {session: false}), async(req, res) => {
     Logger.PUT('/favorite/change');
-    const userId = process.env.USERID || '5eced428cb0ecd4bae119125';  // JWT
+    const userId = req.user._id;
     const items = req.body;
     let flag = true;
     await Promise.each(items, async(element) => { 
