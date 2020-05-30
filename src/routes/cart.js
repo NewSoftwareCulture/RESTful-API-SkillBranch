@@ -12,7 +12,7 @@ const Promo = models.Promo;
 
 // TODO: 
 // StatusCode
-router.get('/cart', passport.authenticate('jwt', {session: false}), async(req, res) => {
+router.get('/cart', passport.authenticate('jwt', {session: false}), async(req, res) => {     // Add statusCode 401
     const userId = req.user._id;
     const cart = await Cart.findOne({userId: userId});
     if(cart) {
@@ -22,9 +22,10 @@ router.get('/cart', passport.authenticate('jwt', {session: false}), async(req, r
             total: cart.total,
             items: cart.items,
         };
-        res.json(result);
+        res.status(200).json(result);
     } else {
         Logger.ERROR('Cart not found');
+        res.status(402);
     }
 });
 
@@ -49,7 +50,7 @@ async function checkDish(dishId) {
     return false;
 };
 
-router.put('/cart', passport.authenticate('jwt', {session: false}), async(req, res) => {
+router.put('/cart', passport.authenticate('jwt', {session: false}), async(req, res) => {     // Add statusCode 401,402
     Logger.PUT('/cart');
     const userId = req.user._id;
     const cart = await Cart.findOne({userId: userId});
@@ -76,9 +77,10 @@ router.put('/cart', passport.authenticate('jwt', {session: false}), async(req, r
             items.push(result);
         } else {
             flag = false;
+            res.status(400);
         }
     }).then(async () => {
-            if (cart != null && flag) await Cart.deleteOne({_id: cart._id});
+        if (cart != null && flag) await Cart.deleteOne({_id: cart._id});
     }).then(async () => {
         if(flag) {
             const updCart = new Cart({
@@ -90,6 +92,7 @@ router.put('/cart', passport.authenticate('jwt', {session: false}), async(req, r
             });
             await updCart.save();
             Logger.db('Update cart!');
+            res.status(202);
         };
     });
 });

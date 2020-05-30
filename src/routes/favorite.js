@@ -11,20 +11,24 @@ const Dish = models.Dish;
 
 // TODO:
 // StatusCode
-router.get('/favorite?:offset?:limit', passport.authenticate('jwt', {session: false}), async(req, res) => {
+router.get('/favorite?:offset?:limit', passport.authenticate('jwt', {session: false}), async(req, res) => {     // Add statusCode 401
     const offset = Number(req.query.offset) || 0;
     const limit = Number(req.query.limit) || 10;
     Logger.GET(`/favorite?offset=${offset}&limit=${limit}`);
     const userId = req.user._id;
     const favorites = await Favorite.find({userId: userId, favorite: true}).skip(offset).limit(limit);
-    let result = favorites.map(element => {
-        return {
-            dishId: element.dishId,
-            favorite: element.favorite,
-            updatedAt: Date.parse(element.updatedAt),
-        };
-    });
-    res.json(result);
+    if(favorites){
+        let result = favorites.map(element => {
+            return {
+                dishId: element.dishId,
+                favorite: element.favorite,
+                updatedAt: Date.parse(element.updatedAt),
+            };
+        });
+        res.status(200).json(result);
+    } else{
+        res.status(402);
+    };
 });
 
 async function checkDishId(dishId){
@@ -42,7 +46,7 @@ async function checkDish(dishId) {
     return false;
 };
 
-router.put('/favorite/change', passport.authenticate('jwt', {session: false}), async(req, res) => {
+router.put('/favorite/change', passport.authenticate('jwt', {session: false}), async(req, res) => {     // Add statusCode 401
     Logger.PUT('/favorite/change');
     const userId = req.user._id;
     const items = req.body;
@@ -67,8 +71,11 @@ router.put('/favorite/change', passport.authenticate('jwt', {session: false}), a
                         favorite: favorite,
                     });
                     Logger.db('Favorite update!');
-                }; 
-            };
+                };
+                res.status(202);
+            } else{
+                res.status(402);
+            }
         } catch(e) {
             Logger.ERROR(e.message);
         };

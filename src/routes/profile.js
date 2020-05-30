@@ -1,5 +1,6 @@
 import { AsyncRouter } from 'express-async-router';
 import passport from 'passport';
+import bcrypt from 'bcryptjs';
 import models from '../models/models';
 import Logger from './Logger';
 
@@ -7,18 +8,20 @@ const router = AsyncRouter();
 
 const User = models.User;
 
-// TODO:
-// StatusCode
-router.get('/profile', passport.authenticate('jwt', {session: false}), async(req, res) => {
+router.get('/profile', passport.authenticate('jwt', {session: false}), async(req, res) => {     // Add statusCode 401
     Logger.GET('/profile');
     const userId = req.user._id;
     const user = await User.findOne({_id: userId});
-    res.json({
-        id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-    });
+    if(user){
+        res.status(200).json({
+            id: user._id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+        });
+    } else{
+        res.status(402);
+    }
 });
 
 async function checkEmail(email, userId) {
@@ -26,7 +29,7 @@ async function checkEmail(email, userId) {
     if(otherUser._id !== userId) throw new Error('Данная почта занята другим пользователем');
 }
 
-router.put('/profile', passport.authenticate('jwt', {session: false}), async(req, res) => {
+router.put('/profile', passport.authenticate('jwt', {session: false}), async(req, res) => {     // Add statusCode 401
     Logger.PUT('/profile');
     const userId = req.user._id;
     const firstName = req.body.firstName;
@@ -43,7 +46,7 @@ router.put('/profile', passport.authenticate('jwt', {session: false}), async(req
             });
             Logger.db('Profile update!');
             const user = await User.findOne({_id: userId});
-            res.json({
+            res.status(202).json({
                 id: user._id,
                 firstName: user.firstName,
                 lastName: user.lastName,
@@ -53,21 +56,31 @@ router.put('/profile', passport.authenticate('jwt', {session: false}), async(req
             Logger.ERROR(e.message);
         };
     } else {
-        res.status(404);
+        res.status(402);
     };
 });
 
-router.put('/profile/password', passport.authenticate('jwt', {session: false}), async(req, res) => {
+router.put('/profile/password', passport.authenticate('jwt', {session: false}), async(req, res) => {     // Add statusCode 401
     Logger.PUT('/profile/password');
     const userId = req.user._id;
     const oldPassword = req.body.oldPassword;
     const newPassword = req.body.newPassword;
     const user = await User.findOne({_id: userId});
-    if (oldPassword === user.password) {
-        await User.findOneAndUpdate({_id: userId}, { 
-            password: newPassword, 
-        });
-        Logger.db('Password update!');
+    if(user){
+        const passwordCheck = bcrypt.compareSync(oldPassword, user.password);
+        if (passwordCheck) {
+            const salt = bcrypt.genSaltSync(10);
+            const password = bcrypt.hashSync(newPassword, salt);
+            await User.findOneAndUpdate({_id: userId}, { 
+                password: password, 
+            });
+            Logger.db('Password update!');
+            res.status(202);
+        } else{
+            res.status(400);
+        };
+    } else{
+        res.status(402);
     };
 });
 

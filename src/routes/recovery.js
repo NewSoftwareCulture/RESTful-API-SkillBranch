@@ -79,7 +79,7 @@ router.post('/auth/recovery/code', async(req, res) => {
         };
     };
 });
-// (en)cript password
+
 router.post('/auth/recovery/password', async(req, res) => {
     Logger.POST('/auth/recovery/password');
     const email = req.body.email;

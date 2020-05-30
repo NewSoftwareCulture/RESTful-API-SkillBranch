@@ -14,8 +14,6 @@ async function checkEmail(email) {
     return false;
 };
 
-// TODO:
-// StatusCode
 router.post('/auth/register', async(req, res) => {
     Logger.POST('/auth/register');
     const firstName = req.body.firstName;
@@ -41,7 +39,7 @@ router.post('/auth/register', async(req, res) => {
 
         user = await User.findOne({email: email});        
         result['id'] =  user._id;
-        res.json(result); 
+        res.status(201).json(result); 
     } else {
         res.status(400);
         Logger.ERROR('User not created!');

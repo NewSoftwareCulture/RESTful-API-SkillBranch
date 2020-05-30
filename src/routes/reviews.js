@@ -10,7 +10,6 @@ const Dish = models.Dish;
 const User = models.User;
 
 // TODO: 'If-Modified-Since'
-// StatusCode
 router.get('/reviews?:offset?:limit', async(req, res) => {
     const offset = Number(req.query.offset) || 0;
     const limit = Number(req.query.limit) || 10;
@@ -29,7 +28,7 @@ router.get('/reviews?:offset?:limit', async(req, res) => {
             updatedAt: Date.parse(element.updatedAt),
         };
     });
-    res.json(result);
+    res.status(200).json(result);
 });
 
 async function checkDishId(dishId){
@@ -47,7 +46,7 @@ async function checkDish(dishId) {
     return false;
 };
 
-router.post('/reviews/new', passport.authenticate('jwt', {session: false}), async(req, res) => {
+router.post('/reviews/new', passport.authenticate('jwt', {session: false}), async(req, res) => {     // Add statusCode 401
     Logger.POST('/reviews/new');
     const dishId = req.body.dishId;
     if(await checkDishId(dishId) && await checkDish(dishId)){
@@ -69,6 +68,8 @@ router.post('/reviews/new', passport.authenticate('jwt', {session: false}), asyn
         await review.save();
         Logger.db('Review created!');
         res.status(201);
+    } else{
+        res.status(402);
     };
 });
 

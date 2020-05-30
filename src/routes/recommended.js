@@ -7,7 +7,6 @@ const router = AsyncRouter();
 const Dish = models.Dish;
 
 // TODO: 'If-Modified-Since'
-// StatusCode
 router.get('/main/recommend?:offset?:limit', async(req, res) => {
     const offset = Number(req.query.offset) || 0;
     const limit = Number(req.query.limit) || 10;
@@ -16,7 +15,7 @@ router.get('/main/recommend?:offset?:limit', async(req, res) => {
     let result = dishes.map(element => {
         return element._id;
     });
-    res.json(result);
+    res.status(200).json(result);
 });
 
 module.exports = router;
