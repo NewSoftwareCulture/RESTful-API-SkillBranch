@@ -1,7 +1,7 @@
 import { AsyncRouter } from 'express-async-router';
-import passport from 'passport';
 import mongoose from 'mongoose';
 import Promise from 'bluebird';
+import authCheck from '../middleware/auth';
 import models from '../models/models';
 import Logger from './Logger';
 
@@ -12,11 +12,8 @@ const Dish = models.Dish;
 const Order = models.Order;
 const Status = models.Status;
 
-// TODO:
-// JWT
-// StatusCode
 // "If-Modified-Since"
-router.post('/orders/new', passport.authenticate('jwt', {session: false}), async(req, res, next) => {
+router.post('/orders/new', authCheck, async(req, res) => {
     Logger.POST('/orders/new');
     const userId = req.user._id;
     const address = req.body.address;
@@ -31,63 +28,67 @@ router.post('/orders/new', passport.authenticate('jwt', {session: false}), async
     const cart = await Cart.findOne({userId: userId});
     let items = [];
     let total = 0;
-    await Promise.each(cart.items, async (element) => {
-        const dishId = element.id;
-        const amount = element.amount;
-        const dish = await Dish.findOne({_id: dishId});
-        const price = dish.price * amount;
-        total += price;
-        const result = {
-            name: dish.dishName,
-            image: dish.image,
-            amount: amount,
-            price: price,
-            dishId: dishId,
-        };
-        items.push(result);
-    }).then(async () => {
-        const order = new Order({
-            orderId,
-            userId,
-            total,
-            address,
-            entrance,
-            floor,
-            apartment,
-            intercom,
-            comment,    
-            statusId: statusId,
-            active: true,
-            completed: false,
-            items,
+    if(cart){
+        await Promise.each(cart.items, async (element) => {
+            const dishId = element.id;
+            const amount = element.amount;
+            const dish = await Dish.findOne({_id: dishId});
+            const price = dish.price * amount;
+            total += price;
+            const result = {
+                name: dish.dishName,
+                image: dish.image,
+                amount: amount,
+                price: price,
+                dishId: dishId,
+            };
+            items.push(result);
+        }).then(async () => {
+            const order = new Order({
+                orderId,
+                userId,
+                total,
+                address,
+                entrance,
+                floor,
+                apartment,
+                intercom,
+                comment,    
+                statusId: statusId,
+                active: true,
+                completed: false,
+                items,
+            });
+            await order.save();
+            Logger.db('Order created!');
+            const status = new Status({
+                statusId,
+                name: 'В обработке',
+                cancelable: true,
+                active: true,
+            });
+            await status.save();
+            Logger.db('Status order created!');
+        }).then(async () => {
+            const order = await Order.findOne({orderId: orderId});
+            res.status(201).json({
+                id: orderId,
+                total: order.total,
+                address: order.address,
+                statusId: order.statusId,
+                active: order.active,
+                completed: order.completed,
+                createdAt: Date.parse(order.createdAt),
+                updatedAt: Date.parse(order.updatedAt),
+                items: order.items,
+            });
         });
-        await order.save();
-        Logger.db('Order created!');
-        const status = new Status({
-            statusId,
-            name: 'В обработке',
-            cancelable: true,
-            active: true,
-        });
-        await status.save();
-        Logger.db('Status order created!');
-    }).then(async () => {
-        const order = await Order.findOne({orderId: orderId});
-        res.json({
-            id: orderId,
-            total: order.total,
-            address: order.address,
-            statusId: order.statusId,
-            active: order.active,
-            completed: order.completed,
-            createdAt: Date.parse(order.createdAt),
-            updatedAt: Date.parse(order.updatedAt),
-            items: order.items,
-        });
-    });
+    } else{
+        res.status(400);
+    };
 });
 
-router.get('/orders?:offset?:limit', passport.authenticate('jwt', {session: false}), async(req, res) => {
+router.get('/orders?:offset?:limit', authCheck, async(req, res) => {
     const offset = Number(req.query.offset) || 0;
     const limit = Number(req.query.limit) || 10;
     Logger.GET(`/orders?offset=${offset}&limit=${limit}`);
@@ -106,7 +107,7 @@ router.get('/orders?:offset?:limit', passport.authenticate('jwt', {session: fals
             items: element.items,
         };
     });
-    res.json(result);
+    res.status(200).json(result);
 });
 
 router.get('/orders/statuses', async(req, res) => {
@@ -122,23 +123,23 @@ router.get('/orders/statuses', async(req, res) => {
             updatedAt: Date.parse(element.updatedAt),
         };
     });
-    res.json(result);
+    res.status(200).json(result);
     
 });
 
-router.put('/orders/cancel', passport.authenticate('jwt', {session: false}), async(req, res) => {
+router.put('/orders/cancel', authCheck, async(req, res) => {
     Logger.PUT('/orders/cancel');
     const orderId = req.body.orderId;
     const userId = req.user._id;
     const order = await Order.findOne({orderId: orderId, userId: userId});
-    if(order !== null){
+    if(order){
         await Order.findOneAndUpdate({orderId: orderId}, {
             completed: true,
         });
         await Status.findOneAndUpdate({statusId: order.statusId}, {
             name: 'Отменен',
         });
-        res.json({
+        res.status(202).json({
             id: orderId,
             total: order.total,
             address: order.address,
@@ -149,6 +150,8 @@ router.put('/orders/cancel', passport.authenticate('jwt', {session: false}), asy
             updatedAt: Date.parse(order.updatedAt),
             items: order.items,
         });
+    } else {
+        res.status(400);
     };
 });
 

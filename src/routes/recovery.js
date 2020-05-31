@@ -1,4 +1,5 @@
 import { AsyncRouter } from 'express-async-router';
+import bcrypt from 'bcryptjs';  
 import models from '../models/models';
 import Logger from './Logger';
 import config from '../../config';
@@ -84,7 +85,8 @@ router.post('/auth/recovery/password', async(req, res) => {
     Logger.POST('/auth/recovery/password');
     const email = req.body.email;
     const code = req.body.code;
-    const newPassword = req.body.password;
+    const salt = bcrypt.genSaltSync(10);
+    const newPassword = bcrypt.hashSync(req.body.password, salt);
     const recovery = await Code.findOne({email: email, code: code});
     const timeNow = Date.parse(new Date());
     if (recovery) {  

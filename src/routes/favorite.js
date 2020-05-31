@@ -1,6 +1,6 @@
 import { AsyncRouter } from 'express-async-router';
-import passport from 'passport';
 import Promise from 'bluebird';
+import authCheck from '../middleware/auth';
 import models from '../models/models';
 import Logger from './Logger';
 
@@ -9,9 +9,7 @@ const router = AsyncRouter();
 const Favorite = models.Favorite;
 const Dish = models.Dish;
 
-// TODO:
-// StatusCode
-router.get('/favorite?:offset?:limit', passport.authenticate('jwt', {session: false}), async(req, res) => {     // Add statusCode 401
+router.get('/favorite?:offset?:limit', authCheck, async(req, res) => {
     const offset = Number(req.query.offset) || 0;
     const limit = Number(req.query.limit) || 10;
     Logger.GET(`/favorite?offset=${offset}&limit=${limit}`);
@@ -46,7 +44,7 @@ async function checkDish(dishId) {
     return false;
 };
 
-router.put('/favorite/change', passport.authenticate('jwt', {session: false}), async(req, res) => {     // Add statusCode 401
+router.put('/favorite/change', authCheck, async(req, res) => {
     Logger.PUT('/favorite/change');
     const userId = req.user._id;
     const items = req.body;

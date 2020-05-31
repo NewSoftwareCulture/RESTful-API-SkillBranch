@@ -1,5 +1,5 @@
 import { AsyncRouter } from 'express-async-router';
-import passport from 'passport';
+import authCheck from '../middleware/auth';
 import models from '../models/models';
 import Logger from './Logger';
 
@@ -46,7 +46,7 @@ async function checkDish(dishId) {
     return false;
 };
 
-router.post('/reviews/new', passport.authenticate('jwt', {session: false}), async(req, res) => {     // Add statusCode 401
+router.post('/reviews/new', authCheck, async(req, res) => {
     Logger.POST('/reviews/new');
     const dishId = req.body.dishId;
     if(await checkDishId(dishId) && await checkDish(dishId)){

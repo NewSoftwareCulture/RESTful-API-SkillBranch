@@ -1,6 +1,6 @@
 import { AsyncRouter } from 'express-async-router';
-import passport from 'passport';
 import bcrypt from 'bcryptjs';
+import authCheck from '../middleware/auth';
 import models from '../models/models';
 import Logger from './Logger';
 
@@ -8,7 +8,12 @@ const router = AsyncRouter();
 
 const User = models.User;
 
-router.get('/profile', passport.authenticate('jwt', {session: false}), async(req, res) => {     // Add statusCode 401
+async function checkEmail(email, userId) {
+    const otherUser = await User.findOne({email: email});
+    if(otherUser && otherUser._id !== userId) throw new Error('Email занят другим пользователем');
+}
+
+router.get('/profile', authCheck, async(req, res) => {
     Logger.GET('/profile');
     const userId = req.user._id;
     const user = await User.findOne({_id: userId});
@@ -24,12 +29,7 @@ router.get('/profile', passport.authenticate('jwt', {session: false}), async(req
     }
 });
 
-async function checkEmail(email, userId) {
-    const otherUser = await User.findOne({email: email});
-    if(otherUser._id !== userId) throw new Error('Данная почта занята другим пользователем');
-}
-
-router.put('/profile', passport.authenticate('jwt', {session: false}), async(req, res) => {     // Add statusCode 401
+router.put('/profile', authCheck, async(req, res) => {
     Logger.PUT('/profile');
     const userId = req.user._id;
     const firstName = req.body.firstName;
@@ -56,11 +56,11 @@ router.put('/profile', passport.authenticate('jwt', {session: false}), async(req
             Logger.ERROR(e.message);
         };
     } else {
-        res.status(402);
+        res.status(402).send('402');
     };
 });
 
-router.put('/profile/password', passport.authenticate('jwt', {session: false}), async(req, res) => {     // Add statusCode 401
+router.put('/profile/password', authCheck, async(req, res) => {
     Logger.PUT('/profile/password');
     const userId = req.user._id;
     const oldPassword = req.body.oldPassword;

@@ -1,7 +1,9 @@
 import { AsyncRouter } from 'express-async-router';
+import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';  
 import models from '../models/models';
 import Logger from './Logger';
+import config from '../../config';
 
 const router = AsyncRouter();
 
@@ -21,8 +23,8 @@ router.post('/auth/register', async(req, res) => {
     const email = req.body.email;
     const salt = bcrypt.genSaltSync(10);
     const password = bcrypt.hashSync(req.body.password, salt);
-    const accessToken = '';
-    const refreshToken = '';
+    let accessToken = '_';
+    let refreshToken = '_';
     if (await checkEmail(email)) {
         let result = {
             firstName,
@@ -30,16 +32,31 @@ router.post('/auth/register', async(req, res) => {
             email,
             password,
             accessToken,
-            refreshToken
+            refreshToken,
         };
         let user = new User(result);
         await user.save();
-
         Logger.db('User created!');
-
-        user = await User.findOne({email: email});        
-        result['id'] =  user._id;
-        res.status(201).json(result); 
+        
+        const tokenConfig = config.jwt.token;
+        accessToken = await jwt.sign({
+            id: user._id,
+        }, tokenConfig.access.key, {expiresIn: tokenConfig.access.expiresIn});
+        refreshToken = await jwt.sign({
+            id: user._id,
+        }, tokenConfig.refresh.key, {});
+        const updUser = await User.findOneAndUpdate({email: email}, {
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+        });      
+        res.status(201).json({
+            id: updUser._id,
+            firstName: updUser.firstName,
+            lastName: updUser.lastName,
+            email: updUser.email,
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+        });
     } else {
         res.status(400);
         Logger.ERROR('User not created!');

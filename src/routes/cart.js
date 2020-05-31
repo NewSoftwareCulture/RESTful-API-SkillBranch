@@ -1,6 +1,6 @@
 import { AsyncRouter } from 'express-async-router';
-import passport from 'passport';
 import Promise from 'bluebird';
+import authCheck from '../middleware/auth';
 import models from '../models/models';
 import Logger from './Logger';
 
@@ -10,9 +10,7 @@ const Cart = models.Cart;
 const Dish = models.Dish;
 const Promo = models.Promo;
 
-// TODO: 
-// StatusCode
-router.get('/cart', passport.authenticate('jwt', {session: false}), async(req, res) => {     // Add statusCode 401
+router.get('/cart', authCheck, async(req, res) => {
     const userId = req.user._id;
     const cart = await Cart.findOne({userId: userId});
     if(cart) {
@@ -50,7 +48,7 @@ async function checkDish(dishId) {
     return false;
 };
 
-router.put('/cart', passport.authenticate('jwt', {session: false}), async(req, res) => {     // Add statusCode 401,402
+router.put('/cart', authCheck, async(req, res) => {
     Logger.PUT('/cart');
     const userId = req.user._id;
     const cart = await Cart.findOne({userId: userId});

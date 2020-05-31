@@ -3,7 +3,15 @@ module.exports = {
         uri: "mongodb://localhost:27017/skillbranch_db",
     },
     jwt: {
-        token: "123456",
+        token: {
+            access: {
+                key: 'secret',
+                expiresIn: 20*60,
+            },
+            refresh: {
+                key: 'secret',
+            },
+        },
     },
     email: {
         service: 'yandex',
@@ -11,5 +19,6 @@ module.exports = {
         password: '12345678test',
         title: 'Recovery code Skillbranch',
     },
+    AUTH_TOKEN: '',
     port:  process.env.PORT || 3000,
 };
