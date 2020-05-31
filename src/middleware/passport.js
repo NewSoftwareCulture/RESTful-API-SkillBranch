@@ -7,7 +7,7 @@ const jwtStrategy = passportJwt.Strategy;
 const ExtractJwt = passportJwt.ExtractJwt;
 
 const User = models.User;
-const key = config.jwt.token;
+const key = config.jwt.token.access.key;
 
 const options = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
