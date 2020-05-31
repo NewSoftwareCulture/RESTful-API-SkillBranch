@@ -13,7 +13,7 @@ router.post('/auth/refresh', async(req, res) => {
     Logger.POST('/auth/refresh');
     const refreshToken = req.body.refreshToken;
     const decoded =  jwtDecode(refreshToken);
-    if(decoded) {
+    if(decoded.id) {
         const tokenConfig = config.jwt.token;
         const accessToken = await jwt.sign({
             id: decoded.id,
