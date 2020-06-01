@@ -6,12 +6,16 @@ import config from '../../config';
 const router = AsyncRouter();
 
 async function parseAddress(address, res) {
+    const filter = new RegExp("(ул|улица|st|street|пер|г|город|д|дом)", 'g');
+    const splitAddress = address.replace(filter, '').split(',');
+
     const cityRe = new RegExp("[А-яA-z]+");
-    const streetRe = new RegExp("(ул|улица|st|street).? [А-яA-z]+");
+    const streetRe = new RegExp("[А-яA-z]+");
     const houseRe = new RegExp("[0-9]+");
-    const city = address.match(cityRe) ? address.match(cityRe)[0] : null;
-    const street = address.match(streetRe) ? address.match(streetRe)[0] : null;
-    const house = address.match(houseRe) ? address.match(houseRe)[0] : null;
+
+    const city = splitAddress[0] ? splitAddress[0].match(cityRe)[0] : null;
+    const street = splitAddress[1] ? splitAddress[1].match(streetRe)[0] : null;
+    const house = splitAddress[2] ? splitAddress[2].match(houseRe)[0] : null;
     res.status(200).json({
         city,
         street,
@@ -43,8 +47,7 @@ router.post('/address/coordinates', async(req, res) => {
             lon: lon,
         },
     }).then(async(response) => {
-        console.log(response.data);
-        const address = response.data.suggestions[0].value;
+        const address = response.data.suggestions[1].value;
         await parseAddress(address, res);
     });
 });
