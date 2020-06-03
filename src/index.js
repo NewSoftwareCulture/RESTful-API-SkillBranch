@@ -5,11 +5,12 @@ import Promise from 'bluebird';
 import cors from 'cors';
 import passport from 'passport';
 import routes from './routes/index';
-import Logger from './routes/Logger';
+import Logger from './utils/Logger';
 import config from '../config';
 
 const uri = config.db.uri;
 const port = config.port;
+console.log(process.env)
 
 mongoose.Promise = Promise;
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false})
@@ -41,6 +42,10 @@ app.use(routes.cart);
 app.use(routes.address);
 app.use(routes.orders);
 app.use(routes.uploadData);
+
+app.get('/', async(req, res) => {
+    res.status(200).send("It's alive!");
+});
 
 app.listen(port, () => {
     Logger(`Example app listening on port ${port}!\n ________________________\n|                        |\n| http://localhost:${port}/ |\n|________________________|\n`);

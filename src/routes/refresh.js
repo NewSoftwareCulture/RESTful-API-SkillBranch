@@ -1,18 +1,19 @@
 import { AsyncRouter } from 'express-async-router';
 import jwt from 'jsonwebtoken';
 import jwtDecode from 'jwt-decode';
-import models from '../models/models';
-import Logger from './Logger';
+import models from '../models';
+import { Logger } from '../utils';
 import config from '../../config';
 
 const router = AsyncRouter();
 
-const User = models.User;
+const { User } = models;
 
 router.post('/auth/refresh', async(req, res) => {
     Logger.POST('/auth/refresh');
     const refreshToken = req.body.refreshToken;
     const decoded =  jwtDecode(refreshToken);
+
     if(decoded.id) {
         const tokenConfig = config.jwt.token;
         const accessToken = await jwt.sign({
@@ -22,11 +23,11 @@ router.post('/auth/refresh', async(req, res) => {
             accessToken: accessToken,
             refreshToken: refreshToken,
         });
-        res.status(201).json({
+        return res.status(201).json({
             accessToken: accessToken,
         });
     } else {
-        res.status(402);
+        return res.status(402).send();
     };
 });
 

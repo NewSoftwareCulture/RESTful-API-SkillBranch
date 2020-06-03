@@ -1,8 +1,8 @@
 import { AsyncRouter } from 'express-async-router';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';  
-import models from '../models/models';
-import Logger from './Logger';
+import models from '../models';
+import { Logger } from '../utils';
 import config from '../../config';
 
 const router = AsyncRouter();

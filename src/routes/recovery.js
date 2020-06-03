@@ -1,13 +1,12 @@
 import { AsyncRouter } from 'express-async-router';
 import bcrypt from 'bcryptjs';  
-import models from '../models/models';
-import Logger from './Logger';
+import models from '../models';
+import { Logger } from '../utils';
 import config from '../../config';
 
 const router = AsyncRouter();
 
-const Code = models.Code;
-const User = models.User;
+const { Code, User } = models;
 
 var nodemailer = require('nodemailer');
 
@@ -48,7 +47,7 @@ router.post('/auth/recovery/email', async(req, res) => {
         });
         await code.save();
         Logger.work('Code 200');
-        res.status(200);
+        return res.status(200).send();
     } else {
         if(timeNow - recovery.time > 3*60*1000) {
             const codeEmail = await sendCode(email);
@@ -57,10 +56,10 @@ router.post('/auth/recovery/email', async(req, res) => {
                 time: timeNow,
             });
             Logger.work('Code 200');
-            res.status(200);
+            return res.status(200).send();
         } else {
             Logger.work('Code 400');
-            res.status(400);
+            return res.status(400).send();
         };
     };
 });
@@ -73,10 +72,10 @@ router.post('/auth/recovery/code', async(req, res) => {
     if (recovery) {
         if (code === recovery.code) {
             Logger.work('Code 200');
-            res.status(200);
+            return res.status(200).send();
         } else {
             Logger.work('Code 400');
-            res.status(400);
+            return res.status(400).send();
         };
     };
 });
@@ -95,13 +94,12 @@ router.post('/auth/recovery/password', async(req, res) => {
                 password: newPassword,
             });  
             Logger.work('Code 200');
-            res.status(200);
+            res.status(200).send();
         } else {
             Logger.work('Code 402');
-            res.status(402);
-        };
-          
-    }
+            res.status(402).send();
+        };   
+    };
 });
 
 module.exports = router;

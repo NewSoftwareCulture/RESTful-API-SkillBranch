@@ -1,13 +1,13 @@
 import passportJwt from 'passport-jwt';
 import models from '../models/models';
-import Logger from '../routes/Logger';
+import Logger from '../utils/Logger';
 import config from '../../config';
 
 const jwtStrategy = passportJwt.Strategy;
 const ExtractJwt = passportJwt.ExtractJwt;
 
-const User = models.User;
-const key = config.jwt.token.access.key;
+const { User } = models;
+const { key } = config.jwt.token.access;
 
 const options = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

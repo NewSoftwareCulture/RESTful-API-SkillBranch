@@ -49,6 +49,9 @@ const DishSchema = new Schema({
     type: Number,
     required: true,
   },
+  commentsCount: {
+    type: Number,
+  },
   active: {
     // Доступно ли блюдо (нет - удалить из бд)
     type: Boolean,
@@ -59,7 +62,7 @@ const DishSchema = new Schema({
 });
 
 DishSchema.methods.toJSON = function () {
-  return _.pick(this, ['categoryId', 'dishName', 'description', 'image', 'oldPrice', 'price', 'rating', 'likes', 'active']);
+  return _.pick(this, ['categoryId', 'dishName', 'description', 'image', 'oldPrice', 'price', 'rating', 'likes', 'commentsCount', 'active']);
 };
 
 export default mongoose.model('Dish', DishSchema);

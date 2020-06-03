@@ -13,4 +13,4 @@ module.exports = {
     address: require('./address'),
     orders: require('./orders'),
     uploadData: require('./uploadData'),
-}
+};

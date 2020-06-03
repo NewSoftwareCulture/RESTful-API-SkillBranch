@@ -9,6 +9,11 @@ const CategorySchema = new Schema({
     type: String,
     required: true,
   },
+  category: { 
+    // Категории
+    type: String,
+    required: true,
+  },
   name: {
     // Название категории
     type: String,
@@ -37,7 +42,7 @@ const CategorySchema = new Schema({
 });
 
 CategorySchema.methods.toJSON = function () {
-  return _.pick(this, ['categoryId', 'name', 'order', 'icon', 'parent', 'active']);
+  return _.pick(this, ['categoryId', 'category', 'name', 'order', 'icon', 'parent', 'active']);
 };
 
 export default mongoose.model('Category', CategorySchema);

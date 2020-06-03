@@ -1,14 +1,12 @@
 import { AsyncRouter } from 'express-async-router';
 import Promise from 'bluebird';
 import authCheck from '../middleware/auth';
-import models from '../models/models';
-import Logger from './Logger';
+import models from '../models';
+import { Logger } from '../utils';
 
 const router = AsyncRouter();
 
-const Cart = models.Cart;
-const Dish = models.Dish;
-const Promo = models.Promo;
+const { Cart, Dish, Promo } = models;
 
 router.get('/cart', authCheck, async(req, res) => {
     const userId = req.user._id;
@@ -20,10 +18,10 @@ router.get('/cart', authCheck, async(req, res) => {
             total: cart.total,
             items: cart.items,
         };
-        res.status(200).json(result);
+        return res.status(200).json(result);
     } else {
         Logger.ERROR('Cart not found');
-        res.status(402);
+        return res.status(402).send();
     }
 });
 
@@ -51,7 +49,6 @@ async function checkDish(dishId) {
 router.put('/cart', authCheck, async(req, res) => {
     Logger.PUT('/cart');
     const userId = req.user._id;
-    const cart = await Cart.findOne({userId: userId});
     const code = req.body.promocode || '';
     const promo = promocode != '' ? await getPromo(code) : '';
     const promotext = promo.promotext;
@@ -59,9 +56,8 @@ router.put('/cart', authCheck, async(req, res) => {
     
     let total = 0;
     let items = [];
-    let flag = true;
     
-    Promise.each(req.body.items, async (element) => {
+    await Promise.each(req.body.items, async (element) => {
         if(await checkDishId(element.id) && await checkDish(element.id)){
             const dish = await Dish.findOne({_id: element.id});
             const amount = Number(element.amount) || 1;
@@ -74,24 +70,42 @@ router.put('/cart', authCheck, async(req, res) => {
             };
             items.push(result);
         } else {
-            flag = false;
-            res.status(400);
-        }
-    }).then(async () => {
-        if (cart != null && flag) await Cart.deleteOne({_id: cart._id});
-    }).then(async () => {
-        if(flag) {
-            const updCart = new Cart({
-                userId: userId,
-                promocode: promocode,
-                promotext: promotext,
-                total: total,
-                items: items,
-            });
-            await updCart.save();
-            Logger.db('Update cart!');
-            res.status(202);
+            return res.status(400).send();
         };
+    });
+    
+    const cart = await Cart.findOne({userId: userId});
+    if (!cart) {
+        const updCart = new Cart({
+            userId: userId,
+            promocode: promocode,
+            promotext: promotext,
+            total: total,
+            items: items,
+        });
+        await updCart.save();
+        Logger.db('Save cart!');
+        const newCart = await Cart.findById(cart._id);
+        return res.status(202).json({
+            promocode: newCart.promocode,
+            promotext: newCart.promotext,
+            total: newCart.total,
+            items: newCart.items,
+        });
+    }
+    await Cart.findByIdAndUpdate(cart._id, {
+        promocode: promocode,
+        promotext: promotext,
+        total: total,
+        items: items,
+    });  
+    Logger.db('Update cart!');
+    const newCart = await Cart.findById(cart._id);
+    return res.status(202).json({
+        promocode: newCart.promocode,
+        promotext: newCart.promotext,
+        total: newCart.total,
+        items: newCart.items,
     });
 });
 

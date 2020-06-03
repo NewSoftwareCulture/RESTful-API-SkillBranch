@@ -1,6 +1,6 @@
 import { AsyncRouter } from 'express-async-router';
 import axios from 'axios';
-import Logger from './Logger';
+import { Logger } from '../utils';
 import config from '../../config';
 
 const router = AsyncRouter();
@@ -16,7 +16,7 @@ async function parseAddress(address, res) {
     const city = splitAddress[0] ? splitAddress[0].match(cityRe)[0] : null;
     const street = splitAddress[1] ? splitAddress[1].match(streetRe)[0] : null;
     const house = splitAddress[2] ? splitAddress[2].match(houseRe)[0] : null;
-    res.status(200).json({
+    return res.status(200).json({
         city,
         street,
         house,

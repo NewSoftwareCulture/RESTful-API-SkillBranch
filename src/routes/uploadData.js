@@ -1,7 +1,9 @@
 import { AsyncRouter } from 'express-async-router';
+import mongoose from 'mongoose';
+import Promise from 'bluebird';
 import fs from 'fs';
-import models from '../models/models';
-import Logger from './Logger';
+import models from '../models';
+import { Logger } from '../utils';
 
 const router = AsyncRouter();
 
@@ -11,20 +13,24 @@ const Dish = models.Dish;
 const dataCategories = require('../data/categories/Categories.json');
 
 async function checkCategoryId(id) {
-    const category = await Category.findOne({categoryId: id});
+    const category = await Category.findOne({category: id});
     if(!category) return true;
     return false;
 };
 
 async function uploadCategory() {
-    dataCategories.forEach(async (element) => {
+    await Promise.each(dataCategories, async (element) => {
         if (await checkCategoryId(element.id)) {
+            const categoryId = await mongoose.Types.ObjectId();
+            const findParent = await Category.findOne({category: element.parent});
+            const parent = findParent ? findParent.categoryId : element.parent;
             const category = new Category({
-                categoryId: element.id,
+                categoryId: categoryId, 
+                category: element.id,
                 name: element.name,
                 order: element.order,
                 icon: element.icon,
-                parent: element.parent,
+                parent: parent,
                 active: element.active,
             });
             await category.save();
@@ -39,8 +45,9 @@ async function checkDishName(name) {
     return false;
 };
 async function uploadDish(dataDishes) {
-    dataDishes.forEach(async (element) => {
+    await Promise.each(dataDishes, async (element) => {
         if (await checkDishName(element.name)) {
+            const findCategory = await Category.findOne({category: element.category});
             const dish = new Dish({
                 dishName: element.name,
                 description: element.description,
@@ -51,10 +58,11 @@ async function uploadDish(dataDishes) {
                 price: element.price,
                 rating: element.rating,
                 likes: element.likes,
-                categoryId: element.category,
+                commentsCount: 0,
+                categoryId: findCategory.categoryId,
                 active: element.active
             });
-            dish.save();
+            await dish.save();
             Logger.db(`Dish "${element.name}" created!`);
         };
     });
@@ -62,8 +70,8 @@ async function uploadDish(dataDishes) {
 
 async function uploadDishes() {
     const dir = fs.readdirSync('./src/data/dishes/');
-    dir.forEach(async(file) => {
-        uploadDish(await require(`../data/dishes/${file}`));
+    await Promise.each(dir, async(file) => {
+        await uploadDish(await require(`../data/dishes/${file}`));
     });
 };
 

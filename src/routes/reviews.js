@@ -1,20 +1,20 @@
 import { AsyncRouter } from 'express-async-router';
+import { hasUpdatedAtSince, getLastDate, Logger} from '../utils'; 
 import authCheck from '../middleware/auth';
-import models from '../models/models';
-import Logger from './Logger';
+import models from '../models';
 
 const router = AsyncRouter();
 
-const Review = models.Review;
-const Dish = models.Dish;
-const User = models.User;
+const { Review, Dish, User } = models;
 
-// TODO: 'If-Modified-Since'
-router.get('/reviews?:offset?:limit', async(req, res) => {
+router.get('/reviews/:dishId', async(req, res) => {
+    const dishId = req.params.dishId;
     const offset = Number(req.query.offset) || 0;
     const limit = Number(req.query.limit) || 10;
     Logger.GET(`/reviews?offset=${offset}&limit=${limit}`);
-    const reviews = await Review.find().skip(offset).limit(limit);
+    const reviews = await Review.find({dishId: dishId}).skip(offset).limit(limit);
+    if(!reviews) return res.status(200).json([]);
+
     let result = reviews.map(element => {
         return {
             id: element.reviewId,
@@ -28,7 +28,12 @@ router.get('/reviews?:offset?:limit', async(req, res) => {
             updatedAt: Date.parse(element.updatedAt),
         };
     });
-    res.status(200).json(result);
+
+    const lastDate = await getLastDate(result);
+    res.setHeader('Last-Modified', lastDate);
+
+    if (!hasUpdatedAtSince(result, req.headers['if-modified-since'])) return res.status(304).send();
+    return res.status(200).json(result);
 });
 
 async function checkDishId(dishId){
@@ -46,30 +51,55 @@ async function checkDish(dishId) {
     return false;
 };
 
-router.post('/reviews/new', authCheck, async(req, res) => {
-    Logger.POST('/reviews/new');
-    const dishId = req.body.dishId;
+async function ratingUpd(dishId, rating) {
+    const dish = await Dish.findOne({_id: dishId});
+    const reviews = await Review.find({dishId: dishId});
+
+    const countReview = reviews ? reviews.length : 0;
+    return ((countReview * dish.rating) + rating) / (countReview + 1);
+};
+
+async function updCountComments(dishId){
+    const dish = await Dish.findById(dishId);
+    const count = dish.commentsCount + 1;
+    await Dish.findByIdAndUpdate(dishId, {
+        commentsCount: count,
+    });
+};
+
+router.post('/reviews/:dishId', authCheck, async(req, res) => {
+    const dishId = req.params.dishId;
+    Logger.POST(`/reviews/${dishId}`);
     if(await checkDishId(dishId) && await checkDish(dishId)){
         const rating = req.body.rating;
         const text = req.body.text;
         const userId = req.user._id;
         const user = await User.findOne({_id: userId});
         const author = user.firstName + ' ' + user.lastName;
-        const date = new Date();
+        const date = new Date().toISOString();
         const active = true;
+
+        if (text) updCountComments(dishId);
+
+        const newRating = await ratingUpd(dishId, rating);
+        await Dish.findOneAndUpdate({_id: dishId}, {
+            rating: newRating,
+        });
+        Logger.db('Rating updated!');
+
         const review = new Review({
             dishId,
-            rating,
-            text,
             author,
             date,
+            rating,
+            text,
             active,
         });
         await review.save();
         Logger.db('Review created!');
-        res.status(201);
-    } else{
-        res.status(402);
+        return res.status(201).send();
+    } else {
+        return res.status(402).send();
     };
 });
 
