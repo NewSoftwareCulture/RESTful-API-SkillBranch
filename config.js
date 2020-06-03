@@ -19,6 +19,6 @@ module.exports = {
         password: process.env.EMAIL_PASSWORD || '',
         title: 'Recovery code Skillbranch',
     },
-    AUTH_TOKEN: process.env.DADATA_AUTH_TOKEN ||'e44398eba74fe445009be67dd8413453a1b59d0e',
+    AUTH_TOKEN: process.env.DADATA_AUTH_TOKEN || '',
     port:  process.env.PORT || 3000,
 };
